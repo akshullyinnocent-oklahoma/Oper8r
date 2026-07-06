@@ -5,6 +5,7 @@ import com.ai.assistance.operit.R
 import com.ai.assistance.operit.core.tools.ToolExecutionLimits
 import com.ai.assistance.operit.util.ChatMarkupRegex
 import com.ai.assistance.operit.data.model.ToolResult
+import com.ai.assistance.operit.core.application.OperitApplication
 
 /**
  * Manages the markup elements used in conversations with the AI assistant.
@@ -14,9 +15,11 @@ import com.ai.assistance.operit.data.model.ToolResult
  */
 class ConversationMarkupManager {
 
-    companion object {
-        private const val TOOL_RESULT_TRUNCATION_SUFFIX =
-            context.getString(R.string.tool_result_truncated)
+        companion object {
+        private val toolResultTruncationSuffix: String
+            get() = OperitApplication.instance.getString(R.string.tool_result_truncated)
+
+
 
         /**
          * Creates an 'error' status markup element for a tool.
@@ -167,12 +170,12 @@ class ConversationMarkupManager {
             if (maxChars <= 0) {
                 return ""
             }
-            if (TOOL_RESULT_TRUNCATION_SUFFIX.length >= maxChars) {
-                return TOOL_RESULT_TRUNCATION_SUFFIX.take(maxChars)
+            if (toolResultTruncationSuffix.length >= maxChars) {
+                return toolResultTruncationSuffix.take(maxChars)
             }
             return payload
-                .take(maxChars - TOOL_RESULT_TRUNCATION_SUFFIX.length)
-                .trimEnd() + TOOL_RESULT_TRUNCATION_SUFFIX
+                .take(maxChars - toolResultTruncationSuffix.length)
+                .trimEnd() + toolResultTruncationSuffix
         }
 
     }

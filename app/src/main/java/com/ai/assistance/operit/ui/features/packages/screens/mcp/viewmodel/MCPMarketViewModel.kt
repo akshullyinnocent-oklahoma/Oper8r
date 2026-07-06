@@ -832,7 +832,7 @@ class MCPMarketViewModel(
         version: String = "v1"
     ): Result<Unit> {
         if (!githubAuth.isLoggedIn()) {
-            return Result.failure(IllegalStateException("context.getString(R.string.mcp_update_login_required)"))
+            return Result.failure(IllegalStateException(context.getString(R.string.mcp_update_login_required)))
         }
 
         _isLoading.value = true
@@ -1058,7 +1058,7 @@ class MCPMarketViewModel(
     ): Result<Unit> {
         return try {
             if (!githubAuth.isLoggedIn()) {
-                return Result.failure(IllegalStateException("context.getString(R.string.mcp_publish_login_required)"))
+                return Result.failure(IllegalStateException(context.getString(R.string.mcp_publish_login_required)))
             }
 
             ensureMcpTitleAvailable(title = title)
@@ -1093,13 +1093,13 @@ class MCPMarketViewModel(
     ) {
         val trimmedTitle = title.trim()
         if (trimmedTitle.isBlank()) {
-            throw IllegalArgumentException("context.getString(R.string.mcp_name_required)")
+            throw IllegalArgumentException(context.getString(R.string.mcp_name_required))
         }
 
         val issues =
             marketService.searchOpenIssuesByExactTitle(trimmedTitle).getOrElse { error ->
                 throw IllegalStateException(
-                    "context.getString(R.string.mcp_check_name_conflict_failed, error.message ?: context.getString(R.string.github_search_failed))"
+                    context.getString(R.string.mcp_check_name_conflict_failed, error.message ?: context.getString(R.string.github_search_failed))
                 )
             }
         val normalizedTitle = normalizePublishTitle(trimmedTitle)
@@ -1109,7 +1109,7 @@ class MCPMarketViewModel(
                     normalizePublishTitle(issue.title) == normalizedTitle
             }
         if (conflictingIssue != null) {
-            throw IllegalStateException("context.getString(R.string.mcp_name_exists, trimmedTitle)")
+            throw IllegalStateException(context.getString(R.string.mcp_name_exists, trimmedTitle))
         }
     }
 

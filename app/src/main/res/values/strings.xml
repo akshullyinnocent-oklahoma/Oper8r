@@ -6949,7 +6949,7 @@
     <string name="perform_edit_edittext_empty">EditText cannot be empty</string>
 
     <!-- GraphVisualizer -->
-    <string name="graph_char_for_measurement">中</string>
+    <string name="graph_char_for_measurement">M</string>
 
     <!-- MnnModelDownloadScreen -->
     <!-- No strings needed here -->
@@ -7430,7 +7430,7 @@
     <string name="supported_app_versions">Supported app versions</string>
     <string name="supported_app_versions_short">Compatible with %1$s</string>
     <string name="unsupported_artifact_version_title">Current app version may be incompatible</string>
-    <string name="unsupported_artifact_version_message">「%1$s」declares supported app version as %3$s, current app version is %2$s. Continuing to download may still fail or be unusable.</string>
+    <string name="unsupported_artifact_version_message">"%1$s"declares supported app version as %3$s, current app version is %2$s. Continuing to download may still fail or be unusable.</string>
     <string name="continue_download_anyway">Continue download anyway</string>
     <string name="publisher_colon">Publisher: %1$s</string>
     <string name="market_registrar_colon">Registrar %1$s</string>
@@ -7471,8 +7471,8 @@
     <string name="invalid_artifact_metadata">The metadata for this market item is invalid and cannot display details.</string>
     <string name="artifact_publication_pending_review_waiting_schedule">Under review. Please wait for scheduled release.</string>
     <string name="artifact_publication_approved_waiting_schedule">Approved. Please wait for scheduled release.</string>
-    <string name="confirm_remove_script_from_market">Are you sure you want to remove the script「%1$s」from the market? This will close the corresponding Issue but will not delete your publish repository.</string>
-    <string name="confirm_remove_package_from_market">Are you sure you want to remove the package「%1$s」from the market? This will close the corresponding Issue but will not delete your publish repository.</string>
+    <string name="confirm_remove_script_from_market">Are you sure you want to remove the script"%1$s"from the market? This will close the corresponding Issue but will not delete your publish repository.</string>
+    <string name="confirm_remove_package_from_market">Are you sure you want to remove the package"%1$s"from the market? This will close the corresponding Issue but will not delete your publish repository.</string>
     <string name="script_publish_info_description">The script will first be uploaded to your own OperitForge publish repository, then the metadata will be registered to OperitScriptMarket. Please ensure the script content, version, and description are accurate.</string>
     <string name="script_edit_info_description">You are editing the information of a published script. After updating, the metadata of the corresponding Issue in the market repository will be overwritten.</string>
     <string name="package_publish_info_description">The package will first be uploaded to your own OperitForge publish repository, then the metadata will be registered to OperitPackageMarket. Please ensure the package content, version, and description are accurate.</string>
@@ -7797,7 +7797,7 @@
     <string name="workspace_attachment_change_modified">Modified</string>
     <string name="workspace_attachment_change_deleted">Deleted</string>
     <string name="workspace_attachment_change_moved">Moved</string>
-    <string name="artifact_publish_node_updated">Node「%1$s」updated</string>
+    <string name="artifact_publish_node_updated">Node"%1$s"updated</string>
     <string name="artifact_project_node_view_title">Node View</string>
     <string name="artifact_project_nodes_loading">Loading project nodes...</string>
     <string name="artifact_project_node_selection_hint">Click to select a node, click again to deselect.</string>
@@ -7818,11 +7818,11 @@
     <string name="skill_update_login_required">You must log in with GitHub to update a Skill.</string>
     <string name="skill_publish_name_empty">Skill name cannot be empty.</string>
     <string name="skill_publish_check_name_conflict_failed">Failed to check for Skill name conflict: %1$s</string>
-    <string name="skill_publish_name_taken_message">There is already a plugin named「%1$s」in the Skill marketplace. Please choose a different name.</string>
+    <string name="skill_publish_name_taken_message">There is already a plugin named"%1$s"in the Skill marketplace. Please choose a different name.</string>
     <string name="ai_message_image_attached_multimodal_notice">Image content has been attached as multimodal input with this message. Do not call file reading tools to read this path.</string>
     <string name="ai_message_result_prefix">[Result: </string>
     <string name="ai_message_result_suffix">]</string>
-    <string name="ai_message_package_warmup_title">【Package Warmup】</string>
+    <string name="ai_message_package_warmup_title">[Package Warmup]</string>
     <string name="ai_message_package_warmup_empty">No package tool calls were detected within the scope of this summary, so no package warmup was performed.</string>
     <string name="ai_message_package_warmup_intro">Based on the frequency of tool usage within the scope of this summary, the most frequently used packages have been automatically activated, and the results of use_package are attached for the next warmup round.</string>
     <string name="ai_message_use_package_failed">use_package call failed: %1$s</string>

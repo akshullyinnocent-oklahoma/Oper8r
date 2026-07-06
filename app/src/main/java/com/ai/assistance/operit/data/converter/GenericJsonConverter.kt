@@ -200,9 +200,9 @@ class GenericJsonConverter : ChatFormatConverter {
      */
     private fun normalizeRole(role: String): String {
         return when (role.lowercase()) {
-            "user", "human", "user" -> "user"
+            "user", "human", "用户" -> "user"
             "assistant", "ai", "bot", "model", "assistant" -> "ai"
-            "system", "system" -> "user" // Convert system messages to user messages
+            "system", "系统" -> "user" // Convert system messages to user messages
             else -> "user"
         }
     }
