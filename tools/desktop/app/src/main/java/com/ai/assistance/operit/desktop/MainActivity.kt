@@ -204,7 +204,7 @@ private fun launchApp(context: Context, packageName: String) {
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(launchIntent)
     } else {
-        Toast.makeText(context, "未找到应用：$packageName", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "App not found: $packageName", Toast.LENGTH_SHORT).show()
     }
 }
 

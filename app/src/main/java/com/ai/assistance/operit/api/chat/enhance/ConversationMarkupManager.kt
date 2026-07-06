@@ -16,7 +16,7 @@ class ConversationMarkupManager {
 
     companion object {
         private const val TOOL_RESULT_TRUNCATION_SUFFIX =
-            "\n[工具结果过长，已截断]"
+            context.getString(R.string.tool_result_truncated)
 
         /**
          * Creates an 'error' status markup element for a tool.

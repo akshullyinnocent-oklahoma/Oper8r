@@ -535,7 +535,7 @@ fun OperitTheme(content: @Composable () -> Unit) {
     }
 }
 
-/** 为亮色主题生成基于主色的完整颜色方案 */
+/** Generate full color scheme based on primary color for light theme */
 private fun generateLightColorScheme(
         primaryColor: Color,
     secondaryColor: Color,
@@ -574,7 +574,7 @@ private fun generateLightColorScheme(
     )
 }
 
-/** 为暗色主题生成基于主色的完整颜色方案 */
+/** Generate full color scheme based on primary color for dark theme */
 private fun generateDarkColorScheme(
         primaryColor: Color,
     secondaryColor: Color,
@@ -638,7 +638,7 @@ private fun getContrastingTextColor(
     return if (luminance > 0.5) Color.Black else Color.White
 }
 
-/** 使颜色变亮 */
+/** Lighten color */
 private fun lightenColor(color: Color, factor: Float): Color {
     val r = color.red + (1f - color.red) * factor
     val g = color.green + (1f - color.green) * factor
@@ -646,7 +646,7 @@ private fun lightenColor(color: Color, factor: Float): Color {
     return Color(r, g, b, color.alpha)
 }
 
-/** 使颜色变暗 */
+/** Darken color */
 private fun darkenColor(color: Color, factor: Float): Color {
     val r = color.red * (1f - factor)
     val g = color.green * (1f - factor)
@@ -654,7 +654,7 @@ private fun darkenColor(color: Color, factor: Float): Color {
     return Color(r, g, b, color.alpha)
 }
 
-/** 混合两种颜色 */
+/** Mix two colors */
 private fun blendColors(color1: Color, color2: Color, ratio: Float): Color {
     val r = color1.red * (1 - ratio) + color2.red * ratio
     val g = color1.green * (1 - ratio) + color2.green * ratio
@@ -662,14 +662,14 @@ private fun blendColors(color1: Color, color2: Color, ratio: Float): Color {
     return Color(r, g, b)
 }
 
-/** 判断颜色是否较浅 */
+/** Determine if color is light */
 private fun isColorLight(color: Color): Boolean {
     // 计算颜色亮度 (0.0-1.0)
     val luminance = 0.299 * color.red + 0.587 * color.green + 0.114 * color.blue
     return luminance > 0.5
 }
 
-/** 判断颜色是否较深 */
+/** Determine if color is dark */
 private fun isColorDark(color: Color): Boolean {
     return !isColorLight(color)
 }

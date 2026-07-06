@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 
 private const val TAG = "DragonBonesView"
 
-/** DragonBones 骨骼动画视图组件 使用 C++ JNI 和 OpenGL ES 进行渲染，以获得高性能 */
+/** DragonBones skeletal animation view component. Uses C++ JNI and OpenGL ES for high performance rendering. */
 class DragonBonesView
 @JvmOverloads
 constructor(context: Context, attrs: AttributeSet? = null, zOrderOnTop: Boolean = true) :
@@ -108,7 +108,7 @@ constructor(context: Context, attrs: AttributeSet? = null, zOrderOnTop: Boolean 
         }
     }
 
-    /** GL渲染器，负责调用JNI代码执行实际的OpenGL绘制 */
+    /** GL renderer, responsible for calling JNI code to perform actual OpenGL drawing. */
     private class DragonBonesRenderer(
             private val onSurfaceCreated: () -> Unit,
             private val onDrawFrame: () -> Unit,
@@ -184,26 +184,26 @@ constructor(context: Context, attrs: AttributeSet? = null, zOrderOnTop: Boolean 
     }
 
     /**
-     * 异步获取当前模型所有可播放的动画名称列表。
+     * Asynchronously get the list of all playable animation names for the current model.
      *
-     * @param callback 回调函数，将在UI线程上接收一个包含所有动画名称的列表。
+     * @param callback Callback function, receives a list of all animation names on the UI thread.
      * ```
-     *                 如果模型未加载或没有动画，将返回一个空列表。
+     *                 If model is not loaded or has no animations, an empty list is returned.
      * ```
      */
     fun getAnimationNames(callback: (List<String>) -> Unit) {
         queueEvent {
             val names = JniBridge.getAnimationNames()?.toList() ?: emptyList()
-            post { // 确保回调在UI线程上执行
+            post { // Ensure callback runs on UI thread
                 callback(names)
             }
         }
     }
 
     /**
-     * 播放指定名称的动画。 如果动画名称不存在，将不会播放任何动画（并会在logcat中打印警告）。
+     * Play animation with specified name. If animation name does not exist, no animation will be played (and a warning will be logged).
      *
-     * @param name 要播放的动画的名称。
+     * @param name Name of the animation to play.
      */
     fun fadeInAnimation(name: String, layer: Int, loop: Int, fadeInTime: Float) {
         Log.d(TAG, "JNI Call: Queueing fadeInAnimation for '$name' on layer $layer")
@@ -234,10 +234,10 @@ constructor(context: Context, attrs: AttributeSet? = null, zOrderOnTop: Boolean 
 }
 
 /**
- * DragonBones 模型信息数据类
- * @param skeletonPath DragonBones骨骼数据（.json文件）的路径，可以是assets相对路径或设备绝对路径。
- * @param textureJsonPath 纹理图集数据（.json文件）的路径。
- * @param textureImagePath 纹理图集图片（.png文件）的路径。
+ * DragonBones model info data class
+ * @param skeletonPath Path to DragonBones skeletal data (.json), can be relative to assets or absolute path.
+ * @param textureJsonPath Path to texture atlas data (.json).
+ * @param textureImagePath Path to texture atlas image (.png).
  */
 data class DragonBonesModel(
         val skeletonPath: String,
