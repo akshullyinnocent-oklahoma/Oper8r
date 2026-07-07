@@ -15,11 +15,13 @@ import com.ai.assistance.operit.core.application.OperitApplication
  */
 class ConversationMarkupManager {
 
-        companion object {
+    companion object {
         private val toolResultTruncationSuffix: String
-            get() = OperitApplication.instance.getString(R.string.tool_result_truncated)
-
-
+            get() = try {
+                OperitApplication.instance.getString(R.string.tool_result_truncated)
+            } catch (e: Exception) {
+                "\n[Tool result too long, truncated]"
+            }
 
         /**
          * Creates an 'error' status markup element for a tool.
@@ -131,7 +133,7 @@ class ConversationMarkupManager {
          * @return The formatted error message
          */
         fun createToolNotAvailableError(toolName: String, details: String? = null): String {
-            val errorMessage = details ?: "The tool `$toolName` is not available."
+            val errorMessage = details ?: "The tool \`$toolName\` is not available."
             return createToolErrorStatus(toolName, errorMessage)
         }
 
@@ -170,12 +172,13 @@ class ConversationMarkupManager {
             if (maxChars <= 0) {
                 return ""
             }
-            if (toolResultTruncationSuffix.length >= maxChars) {
-                return toolResultTruncationSuffix.take(maxChars)
+            val suffix = toolResultTruncationSuffix
+            if (suffix.length >= maxChars) {
+                return suffix.take(maxChars)
             }
             return payload
-                .take(maxChars - toolResultTruncationSuffix.length)
-                .trimEnd() + toolResultTruncationSuffix
+                .take(maxChars - suffix.length)
+                .trimEnd() + suffix
         }
 
     }
