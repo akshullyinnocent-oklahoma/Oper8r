@@ -12,10 +12,10 @@ import java.io.File
 import java.io.FileNotFoundException
 
 /**
- * Workspace目录的DocumentsProvider
+ * DocumentsProvider for Workspace directory
  * 
- * 通过Storage Access Framework暴露内部存储的workspace目录
- * 路径: /data/data/com.ai.assistance.operit/files/workspace
+ * Expose internal storage workspace directory via Storage Access Framework
+ * Path: /data/data/com.ai.assistance.operit/files/workspace
  */
 class WorkspaceDocumentsProvider : DocumentsProvider() {
     
@@ -199,7 +199,7 @@ class WorkspaceDocumentsProvider : DocumentsProvider() {
     }
     
     /**
-     * 将文件信息添加到cursor
+     * Add file information to cursor
      */
     private fun includeFile(result: MatrixCursor, documentId: String) {
         val file = getFileForDocId(documentId)
@@ -243,8 +243,8 @@ class WorkspaceDocumentsProvider : DocumentsProvider() {
     }
     
     /**
-     * 根据文件获取Document ID
-     * 使用相对于workspace根目录的路径作为ID
+     * Get Document ID based on file
+     * Use path relative to workspace root directory as ID
      */
     private fun getDocIdForFile(file: File): String {
         val path = file.absolutePath
@@ -260,7 +260,7 @@ class WorkspaceDocumentsProvider : DocumentsProvider() {
     }
     
     /**
-     * 根据Document ID获取文件
+     * Get file based on Document ID
      */
     private fun getFileForDocId(documentId: String): File {
         val file = if (documentId == "/") {
@@ -279,7 +279,7 @@ class WorkspaceDocumentsProvider : DocumentsProvider() {
     }
     
     /**
-     * 获取文件的MIME类型
+     * Get MIME type of file
      */
     private fun getMimeType(file: File): String {
         val extension = file.extension.lowercase()

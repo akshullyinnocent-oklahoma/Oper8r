@@ -10,8 +10,8 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 /**
- * 通用 JSON 格式转换器
- * 支持标准的 role-content 格式
+ * Generic JSON format converter
+ * Supports standard role-content format
  */
 class GenericJsonConverter : ChatFormatConverter {
     
@@ -84,7 +84,7 @@ class GenericJsonConverter : ChatFormatConverter {
      * 解析对象格式
      */
     private fun parseObjectFormat(obj: JsonObject): List<ChatHistory> {
-        // 可能是单个对话对象，或包含 conversations 字段的对象
+        // Could be a single conversation object, or an object containing the conversations field
         if (obj.containsKey("conversations")) {
             val conversations = obj["conversations"]
             if (conversations is JsonArray) {
@@ -173,7 +173,7 @@ class GenericJsonConverter : ChatFormatConverter {
             if (content.isBlank()) return null
             
             val sender = normalizeRole(role)
-            // 如果有时间戳就用，否则使用递增的时间戳（间隔 100ms）
+            // Use timestamp if available, otherwise use incremental timestamp (100ms interval)
             val timestamp = obj["timestamp"]?.jsonPrimitive?.longOrNull 
                 ?: (baseTimestamp + (index * 100L))
             
@@ -201,8 +201,8 @@ class GenericJsonConverter : ChatFormatConverter {
     private fun normalizeRole(role: String): String {
         return when (role.lowercase()) {
             "user", "human", "用户" -> "user"
-            "assistant", "ai", "bot", "model", "助手" -> "ai"
-            "system", "系统" -> "user" // 系统消息转为用户消息
+            "assistant", "ai", "bot", "model", "assistant" -> "ai"
+            "system", "系统" -> "user" // Convert system messages to user messages
             else -> "user"
         }
     }

@@ -1,3 +1,10 @@
+if (hasProperty("buildScan")) {
+    extensions.findByName("buildScan")?.withGroovyBuilder {
+        setProperty("termsOfServiceUrl", "https://gradle.com/terms-of-service")
+        setProperty("termsOfServiceAgree", "yes")
+    }
+}
+
 buildscript {
     val objectboxVersion by extra("5.3.0")
     repositories {

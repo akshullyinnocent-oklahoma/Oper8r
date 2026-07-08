@@ -678,14 +678,14 @@ class FloatingFullscreenModeViewModel(
                 val triggerName = AvatarEmotionManager.extractMoodTagValue(message.content)
                 if (!triggerName.isNullOrBlank()) {
                     pushVoiceAvatarMotion(
-                        emotion = AvatarEmotionManager.analyzeEmotion(message.content),
+                        emotion = AvatarEmotionManager.analyzeEmotion(getApplication<android.app.Application>().applicationContext, message.content),
                         triggerName = triggerName,
                         playOnce = true
                     )
                     return
                 }
 
-                val emotion = AvatarEmotionManager.analyzeEmotion(message.content)
+                val emotion = AvatarEmotionManager.analyzeEmotion(getApplication<android.app.Application>().applicationContext, message.content)
                 if (emotion == AvatarEmotion.IDLE) {
                     resetVoiceAvatarToIdle()
                 } else {

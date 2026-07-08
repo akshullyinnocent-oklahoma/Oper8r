@@ -10,10 +10,10 @@ object IssueBodyDescriptionExtractor {
         "desc",
         "summary",
         "introduction",
-        "简介",
-        "描述",
-        "介绍",
-        "说明"
+        "Description",
+        "Description",
+        "Description",
+        "Description"
     )
 
     private fun isLabelOnlyLine(raw: String): Boolean {

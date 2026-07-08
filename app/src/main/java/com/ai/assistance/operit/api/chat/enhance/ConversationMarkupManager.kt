@@ -5,6 +5,7 @@ import com.ai.assistance.operit.R
 import com.ai.assistance.operit.core.tools.ToolExecutionLimits
 import com.ai.assistance.operit.util.ChatMarkupRegex
 import com.ai.assistance.operit.data.model.ToolResult
+import com.ai.assistance.operit.core.application.OperitApplication
 
 /**
  * Manages the markup elements used in conversations with the AI assistant.
@@ -15,8 +16,12 @@ import com.ai.assistance.operit.data.model.ToolResult
 class ConversationMarkupManager {
 
     companion object {
-        private const val TOOL_RESULT_TRUNCATION_SUFFIX =
-            "\n[工具结果过长，已截断]"
+        private val toolResultTruncationSuffix: String
+            get() = try {
+                OperitApplication.instance.getString(R.string.tool_result_truncated)
+            } catch (e: Exception) {
+                "\n[Tool result too long, truncated]"
+            }
 
         /**
          * Creates an 'error' status markup element for a tool.
@@ -128,7 +133,7 @@ class ConversationMarkupManager {
          * @return The formatted error message
          */
         fun createToolNotAvailableError(toolName: String, details: String? = null): String {
-            val errorMessage = details ?: "The tool `$toolName` is not available."
+            val errorMessage = details ?: "The tool \`$toolName\` is not available."
             return createToolErrorStatus(toolName, errorMessage)
         }
 
@@ -167,12 +172,13 @@ class ConversationMarkupManager {
             if (maxChars <= 0) {
                 return ""
             }
-            if (TOOL_RESULT_TRUNCATION_SUFFIX.length >= maxChars) {
-                return TOOL_RESULT_TRUNCATION_SUFFIX.take(maxChars)
+            val suffix = toolResultTruncationSuffix
+            if (suffix.length >= maxChars) {
+                return suffix.take(maxChars)
             }
             return payload
-                .take(maxChars - TOOL_RESULT_TRUNCATION_SUFFIX.length)
-                .trimEnd() + TOOL_RESULT_TRUNCATION_SUFFIX
+                .take(maxChars - suffix.length)
+                .trimEnd() + suffix
         }
 
     }

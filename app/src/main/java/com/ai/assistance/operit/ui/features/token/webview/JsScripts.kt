@@ -2,15 +2,15 @@ package com.ai.assistance.operit.ui.features.token.webview
 
 import com.ai.assistance.operit.ui.features.token.network.DeepseekApiConstants
 
-/** 用于WebView中执行的JavaScript脚本 */
+/** JavaScript scripts executed in WebView */
 object JsScripts {
-    /** 获取页面详细信息的脚本 */
+    /** Script to get detailed page information */
     fun getPageInfoScript(): String {
         return """
             (function() {
-                console.log('收集页面信息');
+                console.log('Collecting page info');
                 
-                // 页面基本信息
+                // Basic page info
                 const basicInfo = {
                     url: window.location.href,
                     title: document.title,
@@ -19,7 +19,7 @@ object JsScripts {
                     domain: document.domain
                 };
                 
-                // DOM信息
+                // DOM info
                 const domInfo = {
                     bodyExists: !!document.body,
                     headExists: !!document.head,
@@ -28,20 +28,20 @@ object JsScripts {
                     iframeCount: document.getElementsByTagName('iframe').length
                 };
 
-                // 汇总信息
+                // Summary info
                 const pageInfo = {
                     basicInfo: basicInfo,
                     domInfo: domInfo,
                     timestamp: new Date().toISOString()
                 };
                 
-                console.log('页面信息:', JSON.stringify(pageInfo));
+                console.log('Page info:', JSON.stringify(pageInfo));
                 return JSON.stringify(pageInfo);
             })();
         """.trimIndent()
     }
 
-    /** 获取API密钥的脚本 */
+    /** Script to get API keys */
     fun getApiKeysScript(): String {
         return """
             (function() {
@@ -106,10 +106,10 @@ object JsScripts {
                         const data = JSON.parse(text);
                         console.log('Received data:', JSON.stringify(data));
                         
-                        // 预处理数据，只提取所需的API密钥信息
+                        // Preprocess data, extract only required API key info
                         let apiKeys = [];
                         
-                        // 尝试从data.api_keys中提取
+                        // Try to extract from data.api_keys
                         if (data.data && Array.isArray(data.data.api_keys)) {
                             apiKeys = data.data.api_keys.map(key => ({
                                 name: key.name,
@@ -120,7 +120,7 @@ object JsScripts {
                             }));
                             console.log('Extracted ' + apiKeys.length + ' API keys from data.api_keys');
                         } 
-                        // 如果找不到，尝试从data.biz_data.api_keys中提取
+                        // If not found, try to extract from data.biz_data.api_keys
                         else if (data.data && data.data.biz_data && Array.isArray(data.data.biz_data.api_keys)) {
                             apiKeys = data.data.biz_data.api_keys.map(key => ({
                                 name: key.name,
@@ -132,14 +132,14 @@ object JsScripts {
                             console.log('Extracted ' + apiKeys.length + ' API keys from data.biz_data.api_keys');
                         }
                         
-                        // 如果没有找到任何API密钥
+                        // If no API keys found
                         if (apiKeys.length === 0) {
                             console.log('No API keys found in response');
-                            Android.onError("找不到API密钥数据");
+                            Android.onError("API key data not found");
                             return;
                         }
                         
-                        // 将所有的密钥一次性发送，而不是分批
+                        // Send all keys at once instead of in batches
                         try {
                             const simplifiedResult = {
                                 api_keys: apiKeys
@@ -148,11 +148,11 @@ object JsScripts {
                             Android.onKeysReceived(JSON.stringify(simplifiedResult));
                         } catch (e) {
                             console.error('Error sending keys to Android:', e);
-                            Android.onError("发送API密钥到Android失败: " + e.toString());
+                            Android.onError("Failed to send API keys to Android: " + e.toString());
                         }
                     } catch (e) {
                         console.error('JSON parse error:', e);
-                        Android.onError("JSON解析错误: " + e.toString());
+                        Android.onError("JSON parse error: " + e.toString());
                     }
                 })
                 .catch(error => {
@@ -163,7 +163,7 @@ object JsScripts {
         """.trimIndent()
     }
 
-    /** 删除API密钥的脚本 */
+    /** Script to delete API key */
     fun deleteKeyScript(trackingId: String): String {
         return """
             (function() {
@@ -216,17 +216,17 @@ object JsScripts {
         """.trimIndent()
     }
 
-    /** 获取授权令牌的脚本 */
+    /** Script to get authorization token */
     fun getAuthTokenScript(): String {
         return """
             (function() {
-                // 尝试获取当前页面上的token信息
+                // Try to extract token info on current page
                 console.log('Trying to extract authorization token from page');
                 
-                // 检查document.cookie
+                // Check document.cookie
                 console.log('Cookies:', document.cookie);
                 
-                // 检查localStorage
+                // Check localStorage
                 try {
                     console.log('localStorage keys:', Object.keys(localStorage).join(', '));
                     for (var i = 0; i < Object.keys(localStorage).length; i++) {
@@ -240,7 +240,7 @@ object JsScripts {
                     console.error('localStorage error:', e);
                 }
                 
-                // 检查sessionStorage
+                // Check sessionStorage
                 try {
                     console.log('sessionStorage keys:', Object.keys(sessionStorage).join(', '));
                     for (var i = 0; i < Object.keys(sessionStorage).length; i++) {
@@ -259,7 +259,7 @@ object JsScripts {
         """.trimIndent()
     }
 
-    /** 注入令牌提取器的脚本 */
+    /** Script to inject token extractor */
     fun injectTokenExtractorScript(): String {
         return """
             (function() {
@@ -311,10 +311,10 @@ object JsScripts {
                     }
                 }
                 
-                // Run the extraction immediately
+                // Run extraction immediately
                 extractAndStoreToken();
                 
-                // Also run extraction again after a delay to ensure the page is fully loaded
+                // Also run extraction again after delay to ensure page is fully loaded
                 setTimeout(extractAndStoreToken, 1000);
                 
                 return "Token extractor injected";
