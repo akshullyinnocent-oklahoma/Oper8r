@@ -10,11 +10,11 @@ import androidx.compose.ui.platform.LocalContext
 import com.ai.assistance.operit.data.preferences.UserPreferencesManager
 
 /**
- * AI Markdown text layout settings.
+ * AI Markdown 文本布局设置。
  *
- * - lineHeightMultiplier: extra line height multiplier, 1f is default
- * - letterSpacingSp: extra letter spacing in sp
- * - paragraphSpacingDp: extra paragraph spacing in dp
+ * - lineHeightMultiplier：额外行距倍率，1f 为默认值
+ * - letterSpacingSp：额外字距，单位 sp
+ * - paragraphSpacingDp：段落之间额外增加的间距，单位 dp
  */
 data class AiMarkdownTextLayoutSettings(
     val lineHeightMultiplier: Float = 1f,

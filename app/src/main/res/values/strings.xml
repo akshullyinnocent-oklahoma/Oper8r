@@ -2622,8 +2622,8 @@
     <string name="speech_services_mimo_voice_select_icon">Select voice</string>
     <string name="speech_services_mimo_voice_custom">Custom voice</string>
     <string name="speech_services_mimo_voice_id">voice</string>
-    <string name="speech_services_mimo_voice_id_placeholder">e.g.: mimo_default, 冰糖, or data:audio/mpeg;base64,...</string>
-    <string name="speech_services_mimo_voice_id_hint">Preset voices: mimo_default, 冰糖, 茉莉, 苏打, 白桦, Mia, Chloe, Milo, Dean. For voiceclone, enter the full Base64 audio sample.</string>
+    <string name="speech_services_mimo_voice_id_placeholder">e.g.: mimo_default, BingTang, or data:audio/mpeg;base64,...</string>
+    <string name="speech_services_mimo_voice_id_hint">Preset voices: mimo_default, BingTang, Jasmine, Soda, Birch, Mia, Chloe, Milo, Dean. For voiceclone, enter the full Base64 audio sample.</string>
     <string name="speech_services_doubao_config">Doubao TTS Configuration</string>
     <string name="speech_services_doubao_url">URL</string>
     <string name="speech_services_doubao_url_placeholder">https://openspeech.bytedance.com/api/v1/tts</string>
@@ -5016,7 +5016,7 @@
     <string name="delete_selected_workspaces">Delete Selected Workspaces (%1$d)</string>
     <string name="delete_workspaces_confirmation">Are you sure you want to delete the selected %1$d workspace(s)?\n\nAll files and data will be permanently lost.</string>
     <string name="not_used_by_any_chat">Not used by any chat</string>
-    
+
     <!-- Accessibility - Markdown Block Types -->
     <string name="code_block">Code Block</string>
     <string name="table_block">Table</string>
@@ -5120,7 +5120,7 @@
     <string name="backup_chat_history">Chat History</string>
     <string name="backup_chat_history_subtitle">Cross-format backup, export and recovery</string>
     <string name="backup_chat_current_count">Currently %1$d chat record(s).</string>
-    
+
     <string name="backup_export">Export</string>
     <string name="backup_import">Import</string>
     <string name="backup_delete_all">Delete All</string>
@@ -7828,20 +7828,12 @@
     <string name="ai_message_use_package_failed">use_package call failed: %1$s</string>
     <string name="ai_message_use_package_empty">use_package returned empty.</string>
     <string name="ai_message_package_warmup_item">%1$d. Package %2$s (hit %3$d times)</string>
-    <string name="weekday_sunday">Sunday</string>
-    <string name="weekday_monday">Monday</string>
-    <string name="weekday_tuesday">Tuesday</string>
-    <string name="weekday_wednesday">Wednesday</string>
-    <string name="weekday_thursday">Thursday</string>
-    <string name="weekday_friday">Friday</string>
-    <string name="weekday_saturday">Saturday</string>
+
     <string name="mcp_update_login_required">GitHub login is required to update MCP.</string>
     <string name="mcp_publish_login_required">GitHub login is required to publish MCP.</string>
     <string name="mcp_name_required">MCP name cannot be empty.</string>
-    <string name="mcp_check_name_conflict_failed">Failed to check if MCP name already exists: %1$s</string>
-    <string name="mcp_name_exists">The name \"%1$s\" already exists in the MCP market. Please choose another name.</string>
-    <string name="tool_result_truncated">\n[Tool result too long, truncated]</string>
-    <string name="chat_mutation_aborted_due_to_change">Current conversation changed during deletion, aborting operation</string>
-    <string name="batch_delete_aborted_due_to_change">Current conversation changed during batch deletion, aborting operation</string>
-    <string name="truncate_aborted_due_to_change">Current conversation changed during history truncation, aborting operation</string>
+    <string name="mcp_check_name_conflict_failed">Failed to check for name conflict: %1</string>
+    <string name="mcp_name_exists">The name "%1" already exists in the market.</string>
+    <string name="tool_result_truncated">
+[Tool result too long, truncated]</string>
 </resources>

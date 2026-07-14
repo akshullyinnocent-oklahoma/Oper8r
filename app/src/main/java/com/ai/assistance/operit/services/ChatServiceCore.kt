@@ -66,7 +66,7 @@ class ChatServiceCore(
     private val workspaceTrackerOwnerId = "${selectionMode.name}@${System.identityHashCode(this)}"
 
     init {
-        AppLogger.d(TAG, "ChatServiceCore 初始化")
+        AppLogger.d(TAG, "ChatServiceCore initialization")
         initializeDelegates()
     }
     
@@ -84,7 +84,7 @@ class ChatServiceCore(
                 tokenStatisticsDelegate.setupCollectors()
                 // 通知外部监听者
                 onEnhancedAiServiceReady?.invoke(service)
-                AppLogger.d(TAG, "EnhancedAIService 已更新")
+                AppLogger.d(TAG, "EnhancedAIService updated")
             }
         )
 
@@ -171,7 +171,7 @@ class ChatServiceCore(
                 chatHistoryDelegate.saveCurrentChat(inputTokens, outputTokens, windowSize)
             },
             showErrorMessage = { error ->
-                AppLogger.e(TAG, "错误: $error")
+                AppLogger.e(TAG, "Error: $error")
                 // 错误消息可以通过回调传递给 UI
             },
             updateChatTitle = { chatId, title ->
@@ -196,7 +196,7 @@ class ChatServiceCore(
                 apiConfigDelegate.enableAutoRead.value
             },
             speakMessageHandler = { text, _ ->
-                AppLogger.d(TAG, "朗读消息: $text")
+                AppLogger.d(TAG, "Reading message: $text")
             },
             onTokenLimitExceeded = { chatId, roleCardId, isGroupOrchestrationTurn, groupParticipantNamesText ->
                 messageCoordinationDelegate.handleTokenLimitExceeded(
@@ -231,7 +231,7 @@ class ChatServiceCore(
         }
 
         initialized = true
-        AppLogger.d(TAG, "所有委托已初始化")
+        AppLogger.d(TAG, "All delegates initialized")
     }
 
     // ========== 消息处理相关 ==========

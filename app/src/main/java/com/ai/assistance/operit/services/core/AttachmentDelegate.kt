@@ -279,7 +279,7 @@ class AttachmentDelegate(private val context: Context, private val toolHandler: 
 
         val packageContent = packageManager.usePackage(packageName)
         if (isPackageAttachmentError(packageName, packageContent)) {
-            AppLogger.w(TAG, "添加包附件失败: $packageName, reason=$packageContent")
+            AppLogger.w(TAG, "Failed to add package attachment: $packageName, reason=$packageContent")
             _toastEvent.emit(context.getString(R.string.attachment_package_failed, packageName))
             return
         }
@@ -365,7 +365,7 @@ class AttachmentDelegate(private val context: Context, private val toolHandler: 
     }
 
     private fun packageAttachmentDisplayName(packageName: String): String {
-        return "包: $packageName"
+        return "Package: $packageName"
     }
 
     private fun workspaceMentionAttachmentPath(relativePath: String): String {

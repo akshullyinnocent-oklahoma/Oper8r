@@ -119,12 +119,12 @@ class ChatRuntimeHolder private constructor(context: Context) {
                         .setTokenCounts(chatId, inputTokens, outputTokens, windowSize)
                     AppLogger.d(
                         TAG,
-                        "跨 Session smart 同步完成: $sourceSlot -> $targetSlot, chatId=$chatId, input=$inputTokens, output=$outputTokens, window=$windowSize"
+                        "Cross-session smart sync completed: $sourceSlot -> $targetSlot, chatId=$chatId, input=$inputTokens, output=$outputTokens, window=$windowSize"
                     )
                 } catch (e: Exception) {
                     AppLogger.e(
                         TAG,
-                        "跨 Session smart 同步失败: $sourceSlot -> $targetSlot, chatId=$chatId",
+                        "Cross-session smart sync failed: $sourceSlot -> $targetSlot, chatId=$chatId",
                         e
                     )
                 }
@@ -172,12 +172,12 @@ class ChatRuntimeHolder private constructor(context: Context) {
             targetCore.switchChatLocal(chatId)
             AppLogger.d(
                 TAG,
-                "跨 Session 当前聊天同步: $sourceSlot -> $targetSlot, chatId=$chatId"
+                "Cross-session current chat sync: $sourceSlot -> $targetSlot, chatId=$chatId"
             )
         } catch (e: Exception) {
             AppLogger.e(
                 TAG,
-                "跨 Session 当前聊天同步失败: $sourceSlot -> $targetSlot, chatId=$chatId",
+                "Cross-session current chat sync failed: $sourceSlot -> $targetSlot, chatId=$chatId",
                 e
             )
         }

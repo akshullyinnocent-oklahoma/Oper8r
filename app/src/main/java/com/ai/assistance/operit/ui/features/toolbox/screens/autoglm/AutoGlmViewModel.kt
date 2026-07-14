@@ -202,9 +202,9 @@ class AutoGlmViewModel(private val context: Context) : ViewModel() {
                 SimpleDateFormat("yyyy-MM-dd EEEE", Locale.ENGLISH).format(Date())
             } else {
                 val calendar = Calendar.getInstance()
-                val sdf = SimpleDateFormat(context.getString(R.string.date_format_chinese), Locale.getDefault())
+                val sdf = SimpleDateFormat("yyyy年MM月dd日", Locale.getDefault())
                 val datePart = sdf.format(Date())
-                val weekdayNames = arrayOf(context.getString(R.string.weekday_sunday), context.getString(R.string.weekday_monday), context.getString(R.string.weekday_tuesday), context.getString(R.string.weekday_wednesday), context.getString(R.string.weekday_thursday), context.getString(R.string.weekday_friday), context.getString(R.string.weekday_saturday))
+                val weekdayNames = arrayOf("星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六")
                 val weekday = weekdayNames[calendar.get(Calendar.DAY_OF_WEEK) - 1]
                 "$datePart $weekday"
             }

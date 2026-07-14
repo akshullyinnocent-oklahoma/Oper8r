@@ -146,10 +146,10 @@ class SiliconFlowVoiceProvider(
             }
 
             _isInitialized.value = true
-            AppLogger.i(TAG, "硅基流动TTS初始化成功")
+            AppLogger.i(TAG, "SiliconFlow TTS initialization successful")
             true
         } catch (e: Exception) {
-            AppLogger.e(TAG, "硅基流动TTS初始化失败", e)
+            AppLogger.e(TAG, "SiliconFlow TTS initialization failed", e)
             _isInitialized.value = false
             if (e is TtsException) throw e
             throw TtsException(context.getString(R.string.siliconflow_error_init_failed), cause = e)
@@ -183,7 +183,7 @@ class SiliconFlowVoiceProvider(
 
     private suspend fun fetchAudioFile(request: SpeakRequest): PreparedRequest? {
         if (!isInitialized) {
-            AppLogger.e(TAG, "TTS未初始化")
+            AppLogger.e(TAG, "TTS not initialized")
             return null
         }
 
@@ -201,7 +201,7 @@ class SiliconFlowVoiceProvider(
 
             val strippedInput = request.text.replace(Regex("<[^>]+>"), "").trim()
             if (strippedInput.isBlank()) {
-                AppLogger.w(TAG, "TTS输入为空，跳过请求")
+                AppLogger.w(TAG, "TTS input empty, skipping request")
                 return null
             }
 
@@ -265,8 +265,8 @@ class SiliconFlowVoiceProvider(
                 append("}")
             }
 
-            AppLogger.d(TAG, "TTS请求参数 - model: $model, voice: $voice")
-            AppLogger.d(TAG, "TTS请求体: $requestBody")
+            AppLogger.d(TAG, "TTS request params - model: $model, voice: $voice")
+            AppLogger.d(TAG, "TTS request body: $requestBody")
 
             // 发送HTTP请求
             val url = URL(API_URL)
@@ -300,7 +300,7 @@ class SiliconFlowVoiceProvider(
                 return PreparedRequest(request, tempFile)
             } else {
                 val errorBody = connection.errorStream?.bufferedReader()?.readText()
-                AppLogger.e(TAG, "TTS请求失败，响应码: $responseCode, Body: $errorBody")
+                AppLogger.e(TAG, "TTS request failed, response code: $responseCode, Body: $errorBody")
                 throw TtsException(
                     message = "TTS request failed with code $responseCode",
                     httpStatusCode = responseCode,
@@ -308,7 +308,7 @@ class SiliconFlowVoiceProvider(
                 )
             }
         } catch (e: Exception) {
-            AppLogger.e(TAG, "TTS speak失败", e)
+            AppLogger.e(TAG, "TTS speak failed", e)
             if (e is TtsException) throw e
             throw TtsException("TTS speak failed", cause = e)
         }
@@ -355,7 +355,7 @@ class SiliconFlowVoiceProvider(
             currentPlaybackFile = null
             true
         } catch (e: Exception) {
-            AppLogger.e(TAG, "停止播放失败", e)
+            AppLogger.e(TAG, "Failed to stop playback", e)
             false
         }
     }
@@ -383,7 +383,7 @@ class SiliconFlowVoiceProvider(
                     )
                     setDataSource(file.absolutePath)
                     setOnErrorListener { _, what, extra ->
-                        AppLogger.e(TAG, "MediaPlayer错误: what=$what, extra=$extra")
+                        AppLogger.e(TAG, "MediaPlayer error: what=$what, extra=$extra")
                         true
                     }
                     prepare()
@@ -402,7 +402,7 @@ class SiliconFlowVoiceProvider(
             AppLogger.d(TAG, "playAudioFileAndAwait waitLoopExit paused=${isPaused.get()} speaking=${_isSpeaking.value}")
             true
         } catch (e: Exception) {
-            AppLogger.e(TAG, "播放音频失败", e)
+            AppLogger.e(TAG, "Failed to play audio", e)
             false
         } finally {
             _isSpeaking.value = false
@@ -437,7 +437,7 @@ class SiliconFlowVoiceProvider(
             AppLogger.d(TAG, "pause result=true paused=${isPaused.get()} speaking=${_isSpeaking.value}")
             true
         } catch (e: Exception) {
-            AppLogger.e(TAG, "暂停播放失败", e)
+            AppLogger.e(TAG, "Failed to pause playback", e)
             false
         }
     }
@@ -451,7 +451,7 @@ class SiliconFlowVoiceProvider(
             AppLogger.d(TAG, "resume result=true paused=${isPaused.get()} speaking=${_isSpeaking.value}")
             true
         } catch (e: Exception) {
-            AppLogger.e(TAG, "恢复播放失败", e)
+            AppLogger.e(TAG, "Failed to resume playback", e)
             false
         }
     }
@@ -475,10 +475,10 @@ class SiliconFlowVoiceProvider(
         // 支持系统预置音色和用户自定义音色（以speech:开头）
         if (getAvailableVoices(context).any { it.id == voiceId } || voiceId.startsWith("speech:")) {
             this.voiceId = voiceId
-            AppLogger.d(TAG, "设置音色: $voiceId")
+            AppLogger.d(TAG, "Set voice: $voiceId")
             return true
         }
-        AppLogger.w(TAG, "不支持的音色ID: $voiceId")
+        AppLogger.w(TAG, "Unsupported voice ID: $voiceId")
         return false
     }
 } 

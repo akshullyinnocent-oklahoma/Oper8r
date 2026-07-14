@@ -333,7 +333,7 @@ class MessageProcessingDelegate(
                 waitDurationMs = waitDurationMs,
             )
         }.onFailure {
-            AppLogger.w(TAG, "读取取消请求的统计快照失败", it)
+            AppLogger.w(TAG, "Failed to read stats snapshot for cancelled request", it)
         }.getOrNull()
     }
 
@@ -445,7 +445,7 @@ class MessageProcessingDelegate(
     }
 
     init {
-        AppLogger.d(TAG, "MessageProcessingDelegate初始化: 创建滚动事件流")
+        AppLogger.d(TAG, "MessageProcessingDelegate initialization: creating scroll event stream")
     }
 
     fun updateUserMessage(message: String) {
@@ -519,7 +519,7 @@ class MessageProcessingDelegate(
         if (rawMessageText.isBlank() && attachments.isEmpty() && !isAutoContinuation && !isGroupOrchestrationTurn) {
             AppLogger.d(
                 TAG,
-                "sendUserMessage忽略: 空消息且无附件, chatId=$chatId, autoContinuation=$isAutoContinuation"
+                "sendUserMessage ignored: empty message and no attachments, chatId=$chatId, autoContinuation=$isAutoContinuation"
             )
             return
         }
@@ -527,7 +527,7 @@ class MessageProcessingDelegate(
         if (chatRuntime.isLoading.value) {
             AppLogger.w(
                 TAG,
-                "sendUserMessage忽略: chat正在处理中, chatId=$chatId, roleCardId=$roleCardId, override=${!messageTextOverride.isNullOrBlank()}, suppressUserMessageInHistory=$suppressUserMessageInHistory"
+                "sendUserMessage ignored: chat processing, chatId=$chatId, roleCardId=$roleCardId, override=${!messageTextOverride.isNullOrBlank()}, suppressUserMessageInHistory=$suppressUserMessageInHistory"
             )
             return
         }
@@ -562,7 +562,7 @@ class MessageProcessingDelegate(
                 updateChatTitle(chatId, newTitle)
             }
 
-            AppLogger.d(TAG, "开始处理用户消息：附件数量=${attachments.size}")
+            AppLogger.d(TAG, "Starting user message processing: attachment count=${attachments.size}")
 
             // 获取当前模型配置以检查是否启用直接图片处理
             val configId = chatModelConfigIdOverride?.takeIf { it.isNotBlank() }
@@ -572,7 +572,7 @@ class MessageProcessingDelegate(
             val enableDirectImageProcessing = currentModelConfig.enableDirectImageProcessing
             val enableDirectAudioProcessing = currentModelConfig.enableDirectAudioProcessing
             val enableDirectVideoProcessing = currentModelConfig.enableDirectVideoProcessing
-            AppLogger.d(TAG, "直接图片处理状态: $enableDirectImageProcessing (配置ID: $configId)")
+            AppLogger.d(TAG, "Direct image processing status: $enableDirectImageProcessing (Config ID: $configId)")
             logMessageTiming(
                 stage = "delegate.loadModelConfig",
                 startTimeMs = loadModelConfigStartTime,
@@ -601,7 +601,7 @@ class MessageProcessingDelegate(
                 details = "chatId=$chatId, attachments=${attachments.size}, finalLength=${finalMessageContent.length}"
             )
 
-            // 自动继续且原本消息为空时，不添加到聊天历史（虽然会发送"继续"给AI）
+            // 自动继续且原本消息为空时，不添加到聊天历史（虽然会发送"Continue"给AI）
             // 群组编排模式下，空消息也不添加到聊天历史
             val shouldAddUserMessageToChat =
                 effectivePersistTurn &&
@@ -616,7 +616,7 @@ class MessageProcessingDelegate(
             var userMessage = ChatMessage(
                 sender = "user",
                 content = finalMessageContent,
-                roleName = context.getString(R.string.message_role_user), // 用户消息的角色名固定为"用户"
+                roleName = context.getString(R.string.message_role_user), // 用户消息的角色名固定为"User"
                 displayMode =
                     if (effectiveHideUserMessage) {
                         ChatMessageDisplayMode.HIDDEN_PLACEHOLDER
@@ -689,7 +689,7 @@ class MessageProcessingDelegate(
             var cancellationToPropagate: kotlinx.coroutines.CancellationException? = null
             try {
                 // if (!NetworkUtils.isNetworkAvailable(context)) {
-                //     withContext(Dispatchers.Main) { showErrorMessage("网络连接不可用") }
+                //     withContext(Dispatchers.Main) { showErrorMessage("Network connection unavailable") }
                 //     _isLoading.value = false
                 //     setChatInputProcessingState(activeChatId, EnhancedInputProcessingState.Idle)
                 //     return@launch
@@ -751,7 +751,7 @@ class MessageProcessingDelegate(
                         userPreferencesManager.getAiAvatarForCharacterCardFlow(roleCard.id).first()
                     Pair(roleCard.name, avatar)
                 } catch (e: Exception) {
-                    AppLogger.e(TAG, "获取角色信息失败: ${e.message}", e)
+                    AppLogger.e(TAG, "Failed to get role info: ${e.message}", e)
                     Pair(null, null)
                 }
                 val currentRoleName = characterName ?: "Operit"
@@ -781,7 +781,7 @@ class MessageProcessingDelegate(
                             publishEstimate = false
                         )
                     }.onFailure {
-                        AppLogger.w(TAG, "回合结束后重算上下文窗口失败", it)
+                        AppLogger.w(TAG, "Failed to recalculate context window after turn", it)
                     }.getOrNull()
                 }
 
@@ -892,7 +892,7 @@ class MessageProcessingDelegate(
                         chatModelIndexOverride = chatModelIndexOverride
                     )
                 } catch (e: Exception) {
-                    AppLogger.e(TAG, "获取provider和model信息失败: ${e.message}", e)
+                    AppLogger.e(TAG, "Failed to get provider and model info: ${e.message}", e)
                     Pair("", "")
                 }
                 logMessageTiming(
@@ -912,7 +912,7 @@ class MessageProcessingDelegate(
                 )
                 AppLogger.d(
                     TAG,
-                    "创建带流的AI消息, stream is null: ${aiMessage.contentStream == null}, timestamp: ${aiMessage.timestamp}"
+                    "Creating AI message with stream, stream is null: ${aiMessage.contentStream == null}, timestamp: ${aiMessage.timestamp}"
                 )
 
                 // 检查是否启用waifu模式来决定是否显示流式过程
@@ -1182,7 +1182,7 @@ class MessageProcessingDelegate(
                     turnOutputTokens = service.getCurrentOutputTokenCount()
                     turnCachedInputTokens = service.getCurrentCachedInputTokenCount()
                 }.onFailure {
-                    AppLogger.w(TAG, "读取本轮 token 统计失败", it)
+                    AppLogger.w(TAG, "Failed to read token statistics for this round", it)
                 }
 
                 val waitDurationMs =
@@ -1250,12 +1250,12 @@ class MessageProcessingDelegate(
                 )
             } catch (e: Exception) {
                 if (e is kotlinx.coroutines.CancellationException) {
-                    AppLogger.d(TAG, "消息发送被取消")
+                    AppLogger.d(TAG, "Message sending cancelled")
                     finalInputStateAfterSend = EnhancedInputProcessingState.Idle
                     shouldNotifyTurnComplete = false
                     cancellationToPropagate = e
                 } else {
-                    AppLogger.e(TAG, "发送消息时出错", e)
+                    AppLogger.e(TAG, "Error sending message", e)
                     setChatInputProcessingState(
                         chatId,
                         EnhancedInputProcessingState.Error(context.getString(R.string.message_send_failed, e.message))
@@ -1279,7 +1279,7 @@ class MessageProcessingDelegate(
                             turnOptions = turnOptions
                         )
                     } else {
-                        AppLogger.d(TAG, "取消回合不执行消息收尾: chatId=$activeChatId")
+                        AppLogger.d(TAG, "Turn cancelled, message finalizing skipped: chatId=$activeChatId")
                         false
                     }
                 logMessageTiming(
@@ -1524,7 +1524,7 @@ class MessageProcessingDelegate(
                 turnOutputTokens = service.getCurrentOutputTokenCount()
                 turnCachedInputTokens = service.getCurrentCachedInputTokenCount()
             }.onFailure {
-                AppLogger.w(TAG, "读取重新生成 token 统计失败", it)
+                AppLogger.w(TAG, "Failed to read token statistics for regeneration", it)
             }
 
             val waitDurationMs =
@@ -1561,7 +1561,7 @@ class MessageProcessingDelegate(
             if (e is kotlinx.coroutines.CancellationException) {
                 terminalState = EnhancedInputProcessingState.Idle
             } else {
-                AppLogger.e(TAG, "单条重新生成失败", e)
+                AppLogger.e(TAG, "Single message regeneration failed", e)
                 setChatInputProcessingState(
                     chatId,
                     EnhancedInputProcessingState.Error(
@@ -1606,7 +1606,7 @@ class MessageProcessingDelegate(
         val nextWindowSize = calculateNextWindowSize?.invoke()
         AppLogger.d(
             TAG,
-            "回合完成: chatId=$activeChatId, nextWindow=$nextWindowSize, service=${service.javaClass.simpleName}"
+            "Turn completed: chatId=$activeChatId, nextWindow=$nextWindowSize, service=${service.javaClass.simpleName}"
         )
         onTurnComplete(activeChatId, service, nextWindowSize, turnOptions)
     }
@@ -1657,12 +1657,12 @@ class MessageProcessingDelegate(
                 }
             }
         } catch (e: UninitializedPropertyAccessException) {
-            AppLogger.d(TAG, "AI消息未初始化，跳过流清理步骤")
+            AppLogger.d(TAG, "AI message not initialized, skipping stream cleanup")
         } catch (e: kotlinx.coroutines.CancellationException) {
-            AppLogger.d(TAG, "消息收尾阶段被取消，跳过waifu收尾处理")
+            AppLogger.d(TAG, "Message finalized phase cancelled, skipping waifu cleanup")
             throw e
         } catch (e: Exception) {
-            AppLogger.e(TAG, "处理waifu模式时出错", e)
+            AppLogger.e(TAG, "Error processing waifu mode", e)
             try {
                 val aiMessage = aiMessageProvider()
                 val finalContent = aiMessage.content
@@ -1678,7 +1678,7 @@ class MessageProcessingDelegate(
                     }
                 }
             } catch (ex: Exception) {
-                AppLogger.e(TAG, "回退到普通模式也失败", ex)
+                AppLogger.e(TAG, "Fallback to normal mode also failed", ex)
             }
         }
         return false

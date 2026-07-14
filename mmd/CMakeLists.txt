@@ -37,6 +37,7 @@ set(BUILD_EXTRAS OFF CACHE BOOL "" FORCE)
 set(BUILD_UNIT_TESTS OFF CACHE BOOL "" FORCE)
 set(INSTALL_LIBS OFF CACHE BOOL "" FORCE)
 
+add_definitions(-DBT_NO_PROFILE)
 add_subdirectory("${OPERIT_BULLET_DIR}" bullet3-build)
 
 add_library(

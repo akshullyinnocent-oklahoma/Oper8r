@@ -1093,13 +1093,13 @@ class MCPMarketViewModel(
     ) {
         val trimmedTitle = title.trim()
         if (trimmedTitle.isBlank()) {
-            throw IllegalArgumentException(context.getString(R.string.mcp_name_required))
+            throw IllegalArgumentException("MCP 名称不能为空。")
         }
 
         val issues =
             marketService.searchOpenIssuesByExactTitle(trimmedTitle).getOrElse { error ->
                 throw IllegalStateException(
-                    context.getString(R.string.mcp_check_name_conflict_failed, error.message ?: context.getString(R.string.github_search_failed))
+                    "检查 MCP 名称是否重名失败：${error.message ?: "GitHub 搜索失败"}"
                 )
             }
         val normalizedTitle = normalizePublishTitle(trimmedTitle)
@@ -1109,7 +1109,7 @@ class MCPMarketViewModel(
                     normalizePublishTitle(issue.title) == normalizedTitle
             }
         if (conflictingIssue != null) {
-            throw IllegalStateException(context.getString(R.string.mcp_name_exists, trimmedTitle))
+            throw IllegalStateException("MCP 市场里已经有同名插件「$trimmedTitle」，请换一个名称。")
         }
     }
 

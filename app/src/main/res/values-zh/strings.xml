@@ -7808,20 +7808,12 @@
     <string name="package_conflict_delete_source">删除源文件</string>
     <string name="package_conflict_delete_success">冲突包源文件已删除</string>
     <string name="package_conflict_delete_failed">删除冲突包源文件失败</string>
-    <string name="weekday_sunday">星期日</string>
-    <string name="weekday_monday">星期一</string>
-    <string name="weekday_tuesday">星期二</string>
-    <string name="weekday_wednesday">星期三</string>
-    <string name="weekday_thursday">星期四</string>
-    <string name="weekday_friday">星期五</string>
-    <string name="weekday_saturday">星期六</string>
-    <string name="mcp_update_login_required">GitHub 登录后才能更新 MCP。</string>
-    <string name="mcp_publish_login_required">GitHub 登录后才能发布 MCP。</string>
-    <string name="mcp_name_required">MCP 名称不能为空。</string>
-    <string name="mcp_check_name_conflict_failed">检查 MCP 名称是否重名失败：%1$s</string>
-    <string name="mcp_name_exists">MCP 市场里已经有同名插件「%1$s」，请换一个名称。</string>
-    <string name="tool_result_truncated">\n[工具结果过长，已截断]</string>
-    <string name="chat_mutation_aborted_due_to_change">删除消息时当前会话已变化，放弃操作</string>
-    <string name="batch_delete_aborted_due_to_change">批量删除后续消息时当前会话已变化，放弃操作</string>
-    <string name="truncate_aborted_due_to_change">截断聊天历史时当前会话已变化，放弃操作</string>
+
+    <string name="mcp_update_login_required">GitHub登录后才能更新MCP</string>
+    <string name="mcp_publish_login_required">GitHub登录后才能发布MCP</string>
+    <string name="mcp_name_required">MCP名称不能为空</string>
+    <string name="mcp_check_name_conflict_failed">检查名称冲突失败: %1</string>
+    <string name="mcp_name_exists">名称 "%1" 已存在。</string>
+    <string name="tool_result_truncated">
+[工具结果过长，已截断]</string>
 </resources>

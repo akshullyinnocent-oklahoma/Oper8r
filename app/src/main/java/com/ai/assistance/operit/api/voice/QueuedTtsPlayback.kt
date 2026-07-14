@@ -122,7 +122,7 @@ internal class QueuedTtsPlayback(
             }
             false
         } catch (e: Exception) {
-            AppLogger.e(tag, "暂停TTS播放失败", e)
+            AppLogger.e(tag, "Failed to pause TTS playback", e)
             false
         }
     }
@@ -139,7 +139,7 @@ internal class QueuedTtsPlayback(
             }
             false
         } catch (e: Exception) {
-            AppLogger.e(tag, "恢复TTS播放失败", e)
+            AppLogger.e(tag, "Failed to resume TTS playback", e)
             false
         }
     }
@@ -153,7 +153,7 @@ internal class QueuedTtsPlayback(
         try {
             mediaPlayer?.release()
         } catch (e: Exception) {
-            AppLogger.w(tag, "释放TTS播放器失败", e)
+            AppLogger.w(tag, "Failed to release TTS player", e)
         }
         mediaPlayer = null
         scope.cancel()
@@ -199,7 +199,7 @@ internal class QueuedTtsPlayback(
                 true
             } ?: false
         } catch (e: Exception) {
-            AppLogger.e(tag, "停止TTS播放失败", e)
+            AppLogger.e(tag, "Failed to stop TTS playback", e)
             false
         }
     }
@@ -246,7 +246,7 @@ internal class QueuedTtsPlayback(
                 }
             }
         } catch (e: Exception) {
-            AppLogger.e(tag, "播放TTS音频失败", e)
+            AppLogger.e(tag, "Failed to play TTS audio", e)
         } finally {
             _isSpeaking.value = false
             isPaused.set(false)

@@ -23,10 +23,10 @@ class MimoVoiceProvider(
                     locale = "multi",
                     gender = "NEUTRAL"
                 ),
-                VoiceService.Voice(id = "冰糖", name = "冰糖", locale = "zh-CN", gender = "FEMALE"),
-                VoiceService.Voice(id = "茉莉", name = "茉莉", locale = "zh-CN", gender = "FEMALE"),
-                VoiceService.Voice(id = "苏打", name = "苏打", locale = "zh-CN", gender = "MALE"),
-                VoiceService.Voice(id = "白桦", name = "白桦", locale = "zh-CN", gender = "MALE"),
+                VoiceService.Voice(id = "BingTang", name = "BingTang", locale = "zh-CN", gender = "FEMALE"),
+                VoiceService.Voice(id = "Moli", name = "Moli", locale = "zh-CN", gender = "FEMALE"),
+                VoiceService.Voice(id = "Suda", name = "Suda", locale = "zh-CN", gender = "MALE"),
+                VoiceService.Voice(id = "Baihua", name = "Baihua", locale = "zh-CN", gender = "MALE"),
                 VoiceService.Voice(id = "Mia", name = "Mia", locale = "en-US", gender = "FEMALE"),
                 VoiceService.Voice(id = "Chloe", name = "Chloe", locale = "en-US", gender = "FEMALE"),
                 VoiceService.Voice(id = "Milo", name = "Milo", locale = "en-US", gender = "MALE"),
@@ -128,7 +128,7 @@ class MimoVoiceProvider(
                   "messages": [
                     {
                       "role": "user",
-                      "content": "请自然朗读。语速设置：{rate}x，音高设置：{pitch}x。"
+                      "content": "Please read naturally. Speed: {rate}x, Pitch: {pitch}x."
                     },
                     {
                       "role": "assistant",

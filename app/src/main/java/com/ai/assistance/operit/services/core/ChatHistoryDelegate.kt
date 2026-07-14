@@ -406,7 +406,7 @@ class ChatHistoryDelegate(
             _chatHistory.value.any { it.timestamp == targetTimestamp }
         } catch (e: Exception) {
             currentChatWindow.finishLoadingDisplayWindowFailure()
-            AppLogger.e(TAG, "定位当前聊天消息失败", e)
+            AppLogger.e(TAG, "Failed to locate current chat message", e)
             false
         }
     }
@@ -445,7 +445,7 @@ class ChatHistoryDelegate(
             }
         } catch (e: Exception) {
             currentChatWindow.finishLoadingDisplayWindowFailure()
-            AppLogger.e(TAG, "加载当前聊天更早历史失败", e)
+            AppLogger.e(TAG, "Failed to load earlier chat history", e)
             false
         }
     }
@@ -493,7 +493,7 @@ class ChatHistoryDelegate(
             true
         } catch (e: Exception) {
             currentChatWindow.finishLoadingDisplayWindowFailure()
-            AppLogger.e(TAG, "加载当前聊天更新历史失败", e)
+            AppLogger.e(TAG, "Failed to load newer chat history", e)
             false
         }
     }
@@ -511,7 +511,7 @@ class ChatHistoryDelegate(
             true
         } catch (e: Exception) {
             currentChatWindow.finishLoadingDisplayWindowFailure()
-            AppLogger.e(TAG, "切换到当前聊天最新窗口失败", e)
+            AppLogger.e(TAG, "Failed to switch to latest chat window", e)
             false
         }
     }
@@ -545,7 +545,7 @@ class ChatHistoryDelegate(
                 if (currentId != null && histories.none { it.id == currentId }) {
                     val exists = chatHistoryManager.chatExists(currentId)
                     if (!exists) {
-                        AppLogger.w(TAG, "当前聊天已不存在，清除currentChatId: $currentId")
+                        AppLogger.w(TAG, "Current chat no longer exists, clearing currentChatId: $currentId")
                         if (selectionMode == ChatSelectionMode.FOLLOW_GLOBAL) {
                             chatHistoryManager.clearCurrentChatId()
                         }
@@ -562,17 +562,17 @@ class ChatHistoryDelegate(
                     chatHistoryManager.currentChatIdFlow.collect { chatId ->
                         if (chatId != null && chatId != _currentChatId.value) {
                             if (!chatHistoryManager.chatExists(chatId)) {
-                                AppLogger.w(TAG, "currentChatId不存在于数据库，已清除: $chatId")
+                                AppLogger.w(TAG, "currentChatId not in database, cleared: $chatId")
                                 chatHistoryManager.clearCurrentChatId()
                                 _currentChatId.value = null
                                 clearCurrentChatHistoryInMemory()
                                 return@collect
                             }
-                            AppLogger.d(TAG, "检测到聊天ID变化: ${_currentChatId.value} -> $chatId")
+                            AppLogger.d(TAG, "Chat ID change detected: ${_currentChatId.value} -> $chatId")
                             _currentChatId.value = chatId
                             loadChatMessages(chatId)
                         } else if (chatId == null && _currentChatId.value == null) {
-                            AppLogger.d(TAG, "首次初始化，没有当前聊天")
+                            AppLogger.d(TAG, "First initialization, no current chat")
                             currentChatWindow.reset()
                         }
                     }
@@ -586,16 +586,16 @@ class ChatHistoryDelegate(
                         } ?: chatHistoryManager.currentChatIdFlow.value
 
                     if (initialChatId == null) {
-                        AppLogger.d(TAG, "本地会话初始化时没有 currentChatId")
+                        AppLogger.d(TAG, "No currentChatId during local session initialization")
                         return@launch
                     }
 
                     if (!chatHistoryManager.chatExists(initialChatId)) {
-                        AppLogger.w(TAG, "初始 currentChatId 不存在，跳过本地会话初始化: $initialChatId")
+                        AppLogger.w(TAG, "Initial currentChatId does not exist, skipping local session initialization: $initialChatId")
                         return@launch
                     }
 
-                    AppLogger.d(TAG, "本地会话初始化 currentChatId: $initialChatId")
+                    AppLogger.d(TAG, "Local session initialization currentChatId: $initialChatId")
                     _currentChatId.value = initialChatId
                     loadChatMessages(initialChatId)
                 }
@@ -617,7 +617,7 @@ class ChatHistoryDelegate(
         try {
             val initialPageCount = latestDisplayPageCountByChatId[chatId] ?: 1
             val messages = loadLatestCurrentChatDisplayWindow(chatId, pageCount = initialPageCount)
-            AppLogger.d(TAG, "加载聊天 $chatId 的消息：${messages.size} 条")
+            AppLogger.d(TAG, "Loaded ${messages.size} messages for chat $chatId")
 
             // 查找聊天元数据，更新token统计
             val selectedChat = _chatHistories.value.find { it.id == chatId }
@@ -631,10 +631,10 @@ class ChatHistoryDelegate(
             syncOpeningStatementIfNoUserMessage(chatId)
 
         } catch (e: Exception) {
-            AppLogger.e(TAG, "加载聊天消息失败", e)
+            AppLogger.e(TAG, "Failed to load chat messages", e)
         } finally {
             allowAddMessage.set(true)
-            AppLogger.d(TAG, "聊天 $chatId 加载流程结束，已允许添加消息")
+            AppLogger.d(TAG, "Chat $chatId loading finished, message addition allowed")
         }
     }
 
@@ -649,24 +649,24 @@ class ChatHistoryDelegate(
             historyUpdateMutex.withLock {
                 try {
                     val reloadedMessages = reloadCurrentChatDisplayHistory(chatId)
-                    AppLogger.d(TAG, "智能重新加载聊天 $chatId 完成: ${reloadedMessages.size} 条消息")
+                    AppLogger.d(TAG, "Smart reload of chat $chatId completed: ${reloadedMessages.size} messages")
                 } catch (e: Exception) {
-                    AppLogger.e(TAG, "智能重新加载聊天消息失败", e)
+                    AppLogger.e(TAG, "Smart reload of chat messages failed", e)
                 }
             }
         } finally {
             allowAddMessage.set(true)
-            AppLogger.d(TAG, "聊天 $chatId 智能重载流程结束，已允许添加消息")
+            AppLogger.d(TAG, "Smart reload for chat $chatId finished, message addition allowed")
         }
     }
 
     private suspend fun syncOpeningStatementIfNoUserMessage(chatId: String) {
-        AppLogger.d(TAG, "开始同步开场白，聊天ID: $chatId")
+        AppLogger.d(TAG, "Starting opening synchronization, chat ID: $chatId")
         
         historyUpdateMutex.withLock {
             val chatMeta = _chatHistories.value.firstOrNull { it.id == chatId }
             if (!chatMeta?.characterGroupId.isNullOrBlank()) {
-                AppLogger.d(TAG, "聊天 $chatId 绑定群组角色卡，跳过开场白同步")
+                AppLogger.d(TAG, "Chat $chatId bound to group character card, skipping opening sync")
                 return@withLock
             }
 
@@ -674,11 +674,11 @@ class ChatHistoryDelegate(
             
             AppLogger.d(
                 TAG,
-                "从数据库检查消息 - 内存消息数: ${_chatHistory.value.size}, 是否有用户消息: $hasUserMessage",
+                "Checking messages from DB - memory count: ${_chatHistory.value.size}, has user message: $hasUserMessage",
             )
             
             if (hasUserMessage) {
-                AppLogger.d(TAG, "聊天 $chatId 已存在用户消息，跳过开场白同步")
+                AppLogger.d(TAG, "Chat $chatId already has user messages, skipping opening sync")
                 return@withLock
             }
 
@@ -693,21 +693,21 @@ class ChatHistoryDelegate(
 
             // 如果没有有效的角色卡，使用默认角色卡
             if (effectiveCard == null) {
-                AppLogger.d(TAG, "没有有效的角色卡，跳过开场白处理")
+                AppLogger.d(TAG, "No valid character card, skipping opening processing")
                 return@withLock
             }
 
             val opening = effectiveCard.openingStatement
             val roleName = effectiveCard.name
             if (boundCard == null && boundCardName != null) {
-                AppLogger.w(TAG, "绑定角色卡未找到，回退使用当前活跃角色卡: $boundCardName")
+                AppLogger.w(TAG, "Bound character card not found, falling back to current active card: $boundCardName")
             }
-            AppLogger.d(TAG, "获取角色卡信息 - 名称: $roleName, 开场白长度: ${opening.length}, 是否为空: ${opening.isBlank()}, 绑定角色卡: $boundCardName")
+            AppLogger.d(TAG, "Getting character card info - name: $roleName, opening length: ${opening.length}, is blank: ${opening.isBlank()}, bound card: $boundCardName")
 
             // 使用数据库中的消息作为基准，但优先使用内存中的消息（如果已加载）
             val currentMessages = _chatHistory.value.toMutableList()
             val existingIndex = currentMessages.indexOfFirst { it.sender == "ai" }
-            AppLogger.d(TAG, "当前消息数量: ${currentMessages.size}, 现有AI消息索引: $existingIndex")
+            AppLogger.d(TAG, "Current message count: ${currentMessages.size}, existing AI message index: $existingIndex")
 
             if (existingIndex >= 0) {
                 val existing = currentMessages[existingIndex]
@@ -715,27 +715,27 @@ class ChatHistoryDelegate(
                 if (opening.isNotBlank()) {
                     if (isOpeningMessage) {
                         if (existing.content != opening || existing.roleName != roleName) {
-                            AppLogger.d(TAG, "更新现有开场白消息 - 原内容长度: ${existing.content.length}, 新内容长度: ${opening.length}, 原角色名: ${existing.roleName}, 新角色名: $roleName")
+                            AppLogger.d(TAG, "Updating existing opening - old length: ${existing.content.length}, new length: ${opening.length}, old role: ${existing.roleName}, new role: $roleName")
                             val updated = existing.copy(content = opening, roleName = roleName)
                             currentMessages[existingIndex] = updated
                             setCurrentChatMessagesInMemory(currentMessages)
                             chatHistoryManager.updateMessage(chatId, updated)
-                            AppLogger.d(TAG, "开场白消息更新完成")
+                            AppLogger.d(TAG, "Opening message update completed")
                         } else {
-                            AppLogger.d(TAG, "开场白内容未变化，无需更新")
+                            AppLogger.d(TAG, "Opening content unchanged, no update needed")
                         }
                     } else {
-                        AppLogger.d(TAG, "已有AI消息非开场白，跳过同步")
+                        AppLogger.d(TAG, "Existing AI message is not an opening, skipping sync")
                     }
                 } else {
                     if (isOpeningMessage) {
-                        AppLogger.d(TAG, "开场白为空，删除现有AI开场白消息，时间戳: ${existing.timestamp}")
+                        AppLogger.d(TAG, "Opening blank, deleting existing AI opening, timestamp: ${existing.timestamp}")
                         currentMessages.removeAt(existingIndex)
                         setCurrentChatMessagesInMemory(currentMessages)
                         chatHistoryManager.deleteMessage(chatId, existing.timestamp)
-                        AppLogger.d(TAG, "AI消息删除完成")
+                        AppLogger.d(TAG, "AI message deletion completed")
                     } else {
-                        AppLogger.d(TAG, "开场白为空但现有AI消息非开场白，跳过删除")
+                        AppLogger.d(TAG, "Opening blank but existing AI message not an opening, skipping deletion")
                     }
                 }
             } else if (opening.isNotBlank()) {
@@ -747,17 +747,17 @@ class ChatHistoryDelegate(
                     provider = "", // 开场白不是AI生成，使用空值
                     modelName = "" // 开场白不是AI生成，使用空值
                 )
-                AppLogger.d(TAG, "添加新开场白消息 - 时间戳: ${openingMessage.timestamp}, 角色名: $roleName, 内容长度: ${opening.length}")
+                AppLogger.d(TAG, "Adding new opening message - timestamp: ${openingMessage.timestamp}, role: $roleName, length: ${opening.length}")
                 currentMessages.add(openingMessage)
                 setCurrentChatMessagesInMemory(currentMessages)
                 chatHistoryManager.addMessage(chatId, openingMessage)
-                AppLogger.d(TAG, "开场白消息添加完成，当前消息总数: ${currentMessages.size}")
+                AppLogger.d(TAG, "Opening message added, total count: ${currentMessages.size}")
             } else {
-                AppLogger.d(TAG, "无现有AI消息且开场白为空，无需操作")
+                AppLogger.d(TAG, "No existing AI message and opening blank, no action needed")
             }
         }
         
-        AppLogger.d(TAG, "开场白同步完成，聊天ID: $chatId")
+        AppLogger.d(TAG, "Opening sync completed, chat ID: $chatId")
     }
 
     /** 检查是否应该创建新聊天，确保同步 */
@@ -863,7 +863,7 @@ class ChatHistoryDelegate(
         coroutineScope.launch {
             // 切换对话时，禁止添加消息
             allowAddMessage.set(false)
-            AppLogger.d(TAG, "切换对话到 $chatId (syncToGlobal=$syncToGlobal)，已禁止添加消息")
+            AppLogger.d(TAG, "Switching conversation to $chatId (syncToGlobal=$syncToGlobal), message addition disabled")
 
             try {
                 val (inputTokens, outputTokens, windowSize) = getChatStatistics()
@@ -892,7 +892,7 @@ class ChatHistoryDelegate(
                     allowAddMessage.set(true)
                     AppLogger.w(
                         TAG,
-                        "切换对话流程结束时消息添加仍被禁用，已恢复状态: chatId=$chatId, syncToGlobal=$syncToGlobal"
+                        "Message addition still disabled at end of switch process, status restored: chatId=$chatId, syncToGlobal=$syncToGlobal"
                     )
                 }
             }
@@ -1081,7 +1081,7 @@ class ChatHistoryDelegate(
     /** 删除单条消息 */
     fun deleteMessage(index: Int) {
         coroutineScope.launch {
-            runCurrentChatDestructiveHistoryMutation(context.getString(R.string.chat_mutation_aborted_due_to_change)) { chatId ->
+            runCurrentChatDestructiveHistoryMutation("Current session changed during message deletion, abandoning operation") { chatId ->
                 val currentMessages = _chatHistory.value.toMutableList()
                 if (index < 0 || index >= currentMessages.size) {
                     return@runCurrentChatDestructiveHistoryMutation false
@@ -1153,7 +1153,7 @@ class ChatHistoryDelegate(
 
     /** 从指定索引删除后续所有消息 */
     suspend fun deleteMessagesFrom(index: Int) {
-        runCurrentChatDestructiveHistoryMutation(context.getString(R.string.batch_delete_aborted_due_to_change)) { chatId ->
+        runCurrentChatDestructiveHistoryMutation("Current session changed during batch deletion, abandoning operation") { chatId ->
                 val currentMessages = _chatHistory.value
                 if (index < 0 || index >= currentMessages.size) {
                     return@runCurrentChatDestructiveHistoryMutation false
@@ -1372,7 +1372,7 @@ class ChatHistoryDelegate(
 
         if (existingIndex >= 0) {
             if (message.contentStream == null || currentMessages[existingIndex].contentStream == null) {
-                AppLogger.d(TAG, "更新当前会话内存消息, ts: ${message.timestamp}")
+                AppLogger.d(TAG, "Updating current session memory message, ts: ${message.timestamp}")
                 setCurrentChatMessagesInMemory(
                     currentMessages.mapIndexed { index, existingMessage ->
                         if (index == existingIndex) {
@@ -1387,14 +1387,14 @@ class ChatHistoryDelegate(
         }
 
         if (currentChatWindow.hasPersistedNewerHistoryNow()) {
-            AppLogger.d(TAG, "当前显示窗口不是最新窗口，跳过内存追加消息, ts: ${message.timestamp}")
+            AppLogger.d(TAG, "Current window is not the latest, skipping memory append, ts: ${message.timestamp}")
             return false
         }
 
         val currentPageCount = countDisplayPages(currentMessages).coerceIn(1, MAX_DISPLAY_PAGE_COUNT)
         val updatedMessages = currentMessages + message
         val windowMessages = takeNewestDisplayPages(updatedMessages, currentPageCount)
-        AppLogger.d(TAG, "向当前会话内存追加消息, ts: ${message.timestamp}")
+        AppLogger.d(TAG, "Appending message to current session memory, ts: ${message.timestamp}")
         setCurrentChatMessagesInMemory(
             messages = windowMessages,
             hasOlderPersistedHistory = currentChatWindow.hasPersistedOlderHistoryNow(),
@@ -1420,7 +1420,7 @@ class ChatHistoryDelegate(
             if (isCurrentChat && !allowAddMessage.get()) {
                 AppLogger.d(
                     TAG,
-                    "当前会话正在切换，跳过内存刷新但继续持久化消息: timestamp=${message.timestamp}"
+                    "Current session switching, skipping memory refresh but continuing persistence: timestamp=${message.timestamp}"
                 )
                 chatHistoryManager.updateMessage(targetChatId, message)
                 return@withLock
@@ -1442,7 +1442,7 @@ class ChatHistoryDelegate(
             } else {
                 AppLogger.d(
                     TAG,
-                    "添加新消息到聊天 $targetChatId, isCurrent=$isCurrentChat, stream is null: ${message.contentStream == null}, ts: ${message.timestamp}"
+                    "Adding new message to chat $targetChatId, isCurrent=$isCurrentChat, stream is null: ${message.contentStream == null}, ts: ${message.timestamp}"
                 )
                 if (isVisibleNewMessage) {
                     chatHistoryManager.addMessage(targetChatId, message)
@@ -1469,7 +1469,7 @@ class ChatHistoryDelegate(
      * @param timestampOfFirstDeletedMessage 用于删除数据库记录的起始时间戳。如果为null，则清空所有消息。
      */
     suspend fun truncateChatHistory(timestampOfFirstDeletedMessage: Long?) {
-        runCurrentChatDestructiveHistoryMutation(context.getString(R.string.truncate_aborted_due_to_change)) { chatIdSnapshot ->
+        runCurrentChatDestructiveHistoryMutation("Current session changed during history truncation, abandoning operation") { chatIdSnapshot ->
             if (timestampOfFirstDeletedMessage != null) {
                 // 从数据库中删除指定时间戳之后的消息
                 chatHistoryManager.deleteMessagesFrom(
@@ -1593,14 +1593,14 @@ class ChatHistoryDelegate(
             if (persistedSummaryMessage == null) {
                 AppLogger.w(
                     TAG,
-                    "总结消息插入被跳过: chatId=$chatId, before=$beforeTimestamp, after=$afterTimestamp",
+                    "Summary message insertion skipped: chatId=$chatId, before=$beforeTimestamp, after=$afterTimestamp",
                 )
                 return@withLock
             }
 
             AppLogger.d(
                 TAG,
-                "添加总结消息: chatId=$chatId, persistedTimestamp=${persistedSummaryMessage.timestamp}, before=$beforeTimestamp, after=$afterTimestamp",
+                "Adding summary message: chatId=$chatId, persistedTimestamp=${persistedSummaryMessage.timestamp}, before=$beforeTimestamp, after=$afterTimestamp",
             )
 
             // 更新消息列表

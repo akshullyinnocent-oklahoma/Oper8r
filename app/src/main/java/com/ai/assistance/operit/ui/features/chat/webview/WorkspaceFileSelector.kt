@@ -611,9 +611,9 @@ private fun buildMentionPackageOptions(
 private fun buildMentionPackageSubtitle(suggestion: MentionPackageSuggestion): String {
     val typeLabel =
         when (suggestion.kind) {
-            MentionPackageKind.PACKAGE -> context.getString(R.string.nav_group_tools)
-            MentionPackageKind.SKILL -> context.getString(R.string.skills)
-            MentionPackageKind.MCP -> context.getString(R.string.mcp)
+            MentionPackageKind.PACKAGE -> "工具包"
+            MentionPackageKind.SKILL -> "Skill 包"
+            MentionPackageKind.MCP -> "MCP 包"
         }
 
     val metaParts = buildList {

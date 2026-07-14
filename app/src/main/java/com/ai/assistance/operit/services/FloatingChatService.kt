@@ -224,13 +224,13 @@ class FloatingChatService : Service(), FloatingWindowCallback {
 
             chatCore = ChatRuntimeHolder.getInstance(applicationContext).getCore(ChatRuntimeSlot.FLOATING)
             chatCore.setUiBridge(EmptyChatServiceUiBridge)
-            AppLogger.d(TAG, "ChatServiceCore 已初始化")
+            AppLogger.d(TAG, "ChatServiceCore initialized")
 
             // 订阅聊天历史更新
             serviceScope.launch {
                 chatCore.chatHistory.collect { messages ->
                     chatMessages.value = messages
-                    AppLogger.d(TAG, "聊天历史已更新: ${messages.size} 条消息")
+                    AppLogger.d(TAG, "Chat history updated: ${messages.size} messages")
                 }
             }
             
@@ -238,7 +238,7 @@ class FloatingChatService : Service(), FloatingWindowCallback {
             serviceScope.launch {
                 chatCore.attachments.collect { newAttachments ->
                     attachments.value = newAttachments
-                    AppLogger.d(TAG, "附件列表已更新: ${newAttachments.size} 个附件")
+                    AppLogger.d(TAG, "Attachment list updated: ${newAttachments.size} attachments")
                 }
             }
 
@@ -252,20 +252,20 @@ class FloatingChatService : Service(), FloatingWindowCallback {
                     else stateMap[chatId] ?: InputProcessingState.Idle
                 }.collect { state ->
                     inputProcessingState.value = state
-                    AppLogger.d(TAG, "输入处理状态已更新: $state")
+                    AppLogger.d(TAG, "Input processing state updated: $state")
                 }
             }
             
             // 设置 EnhancedAIService 就绪回调，以便监听输入处理状态
             chatCore.setOnEnhancedAiServiceReady { aiService ->
-                AppLogger.d(TAG, "EnhancedAIService 已就绪，开始监听输入处理状态")
+                AppLogger.d(TAG, "EnhancedAIService ready, starting input state listener")
                 serviceScope.launch {
                     try {
                         aiService.inputProcessingState.collect { _ -> }
                     } catch (e: kotlinx.coroutines.CancellationException) {
-                        AppLogger.d(TAG, "输入处理状态监听已取消")
+                        AppLogger.d(TAG, "Input state listener cancelled")
                     } catch (e: Exception) {
-                        AppLogger.e(TAG, "监听输入处理状态失败", e)
+                        AppLogger.e(TAG, "Failed to listen to input state", e)
                     }
                 }
             }
@@ -542,7 +542,7 @@ class FloatingChatService : Service(), FloatingWindowCallback {
 
     override fun onLowMemory() {
         super.onLowMemory()
-        AppLogger.d(TAG, "onLowMemory: 系统内存不足")
+        AppLogger.d(TAG, "onLowMemory: System memory low")
         saveState()
     }
 
@@ -564,7 +564,7 @@ class FloatingChatService : Service(), FloatingWindowCallback {
             try {
                 // 直接使用 chatCore 的 AttachmentDelegate 处理附件
                 chatCore.handleAttachment(request)
-                AppLogger.d(TAG, "附件已添加: $request")
+                AppLogger.d(TAG, "Attachment added: $request")
             } catch (e: Exception) {
                 AppLogger.e(TAG, "Error handling attachment request", e)
             }
@@ -572,7 +572,7 @@ class FloatingChatService : Service(), FloatingWindowCallback {
     }
 
     fun removeAttachment(filePath: String) {
-        AppLogger.d(TAG, "移除附件: $filePath")
+        AppLogger.d(TAG, "Removed attachment: $filePath")
         // 直接使用 chatCore 的 AttachmentDelegate 移除附件
         chatCore.removeAttachment(filePath)
     }
@@ -694,9 +694,9 @@ class FloatingChatService : Service(), FloatingWindowCallback {
                     messageTextOverride = message
                 )
                 
-                AppLogger.d(TAG, "消息已通过 chatCore 发送")
+                AppLogger.d(TAG, "Message sent via chatCore")
             } catch (e: Exception) {
-                AppLogger.e(TAG, "发送消息时出错", e)
+                AppLogger.e(TAG, "Error sending message", e)
             }
         }
     }

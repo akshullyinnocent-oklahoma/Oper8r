@@ -2,10 +2,7 @@ package com.ai.assistance.operit.ui.floating.ui.pet
 
 import com.ai.assistance.operit.util.AppLogger
 import com.ai.assistance.operit.core.avatar.common.state.AvatarEmotion
-import com.ai.assistance.operit.R
 import com.ai.assistance.operit.core.avatar.common.state.AvatarMoodTypes
-import android.content.Context
-import com.ai.assistance.operit.R
 
 /**
  * Avatar表情管理器
@@ -17,12 +14,12 @@ object AvatarEmotionManager {
      * 从文本内容推理情感
      * 通过关键词匹配来判断应该使用哪种表情
      */
-    fun inferEmotionFromText(context: Context, text: String): AvatarEmotion {
+    fun inferEmotionFromText(text: String): AvatarEmotion {
         val t = text.lowercase()
-        val happyKeywords = listOf(context.getString(R.string.emoticon_happy), context.getString(R.string.emoticon_gladsome), context.getString(R.string.emoticon_not_bad), context.getString(R.string.emoticon_great), context.getString(R.string.emoticon_excellent), "😀", "🙂", "😊", "😄", context.getString(R.string.emoticon_praise))
-        val angryKeywords = listOf(context.getString(R.string.emoticon_angry), context.getString(R.string.emoticon_furious), context.getString(R.string.emoticon_infuriated), context.getString(R.string.emoticon_hate), context.getString(R.string.emoticon_terrible), "😡", context.getString(R.string.emoticon_fury))
-        val cryKeywords = listOf(context.getString(R.string.emoticon_sad), context.getString(R.string.emoticon_sorrow), context.getString(R.string.emoticon_depressed), context.getString(R.string.emoticon_gloomy), context.getString(R.string.emoticon_cry), "😭", "😢")
-        val shyKeywords = listOf(context.getString(R.string.emoticon_shy), context.getString(R.string.emoticon_shyness), context.getString(R.string.emoticon_blush), context.getString(R.string.emoticon_embarrassed), "///")
+        val happyKeywords = listOf("开心", "高兴", "不错", "棒", "太好了", "😀", "🙂", "😊", "😄", "赞")
+        val angryKeywords = listOf("生气", "愤怒", "气死", "讨厌", "糟糕", "😡", "怒")
+        val cryKeywords = listOf("难过", "伤心", "沮丧", "忧伤", "哭", "😭", "😢")
+        val shyKeywords = listOf("害羞", "羞", "脸红", "不好意思", "///")
         
         fun containsAny(keys: List<String>): Boolean = 
             keys.any { t.contains(it) || text.contains(it) }
@@ -61,7 +58,7 @@ object AvatarEmotionManager {
      * 综合分析文本，返回最合适的表情
      * 优先使用mood标签，如果没有则使用关键词推理
      */
-    fun analyzeEmotion(context: Context, text: String): AvatarEmotion {
+    fun analyzeEmotion(text: String): AvatarEmotion {
         AppLogger.d("AvatarEmotionManager", "分析情感 - 原始文本: $text")
         
         // 首先尝试从mood标签获取
@@ -75,7 +72,7 @@ object AvatarEmotionManager {
         }
         
         // 如果没有mood标签，则使用关键词推理
-        val emotion = inferEmotionFromText(context, text)
+        val emotion = inferEmotionFromText(text)
         AppLogger.d("AvatarEmotionManager", "使用关键词推理: $emotion")
         return emotion
     }

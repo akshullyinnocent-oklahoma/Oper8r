@@ -39,7 +39,7 @@ val Typography = Typography(
 )
 
 /**
- * Get FontFamily based on system font name
+ * 根据系统字体名称获取 FontFamily
  */
 fun getSystemFontFamily(systemFontName: String): FontFamily {
     return when (systemFontName) {
@@ -52,7 +52,7 @@ fun getSystemFontFamily(systemFontName: String): FontFamily {
 }
 
 /**
- * Load custom font from file path
+ * 从文件路径加载自定义字体
  */
 fun loadCustomFontFamily(context: Context, fontPath: String): FontFamily? {
     return try {
@@ -78,7 +78,7 @@ fun loadCustomFontFamily(context: Context, fontPath: String): FontFamily? {
 }
 
 /**
- * Resolve optional FontFamily based on configuration
+ * 根据配置解析可选 FontFamily
  */
 fun resolveConfiguredFontFamily(
     context: Context,
@@ -102,7 +102,7 @@ fun resolveConfiguredFontFamily(
 }
 
 /**
- * Apply specified FontFamily to the entire set of Typography
+ * 将指定 FontFamily 应用于整套 Typography
  */
 fun applyFontFamilyToTypography(
     baseTypography: Typography,
@@ -132,7 +132,7 @@ fun applyFontFamilyToTypography(
 }
 
 /**
- * Create custom Typography based on user settings
+ * 根据用户设置创建自定义 Typography
  */
 fun createCustomTypography(
     context: Context,

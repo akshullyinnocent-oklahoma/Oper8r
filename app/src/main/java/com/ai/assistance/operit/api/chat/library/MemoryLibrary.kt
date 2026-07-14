@@ -846,7 +846,7 @@ object MemoryLibrary {
                 userPreferences = userPreferences
             )
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Failed to parse analysis result: $jsonString", e)
+            AppLogger.e(TAG, "解析分析结果失败: $jsonString", e)
             ParsedAnalysis(null)
         }
     }
@@ -918,7 +918,7 @@ object MemoryLibrary {
                 val date = extractValue(birthDateMatch)?.let { dateFormat.parse(it) }
                 if (date != null) birthDateTimestamp = date.time
             } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to parse birth date: ${e.message}")
+                AppLogger.e(TAG, "解析出生日期失败: ${e.message}")
             }
         } else if (birthYearMatch != null) {
             try {
@@ -929,7 +929,7 @@ object MemoryLibrary {
                 calendar.set(java.util.Calendar.MILLISECOND, 0)
                 birthDateTimestamp = calendar.timeInMillis
             } catch (e: Exception) {
-                AppLogger.e(TAG, "Failed to parse birth year: ${e.message}")
+                AppLogger.e(TAG, "解析出生年份失败: ${e.message}")
             }
         }
 

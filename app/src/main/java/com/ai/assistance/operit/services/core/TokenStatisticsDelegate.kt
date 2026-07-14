@@ -175,7 +175,7 @@ class TokenStatisticsDelegate(
             addAll(boundServicesByChatKey.values)
         }
         services.forEach { it.resetTokenCounters() }
-        AppLogger.d(TAG, "token统计已重置")
+        AppLogger.d(TAG, "Token statistics reset")
     }
 
     /** 更新累计的token统计信息 */
@@ -205,7 +205,7 @@ class TokenStatisticsDelegate(
                             "Input: $newInput, Output: $newOutput"
                 )
             } catch (e: Exception) {
-                AppLogger.e(TAG, "获取累计token计数时出错: ${e.message}", e)
+                AppLogger.e(TAG, "Error getting accumulated token count: ${e.message}", e)
             }
         }
     }

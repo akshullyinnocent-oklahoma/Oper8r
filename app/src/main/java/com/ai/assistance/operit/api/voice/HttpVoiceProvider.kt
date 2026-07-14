@@ -255,7 +255,7 @@ open class HttpVoiceProvider(
 
             return audioFile
         } catch (e: Exception) {
-            AppLogger.e(TAG, "HTTP TTS播放失败", e)
+            AppLogger.e(TAG, "HTTP TTS playback failed", e)
             throw e
         }
     }
@@ -285,7 +285,7 @@ open class HttpVoiceProvider(
             _isInitialized.value = false
             clearCache()
         } catch (e: Exception) {
-            AppLogger.e(TAG, "关闭HTTP TTS引擎失败", e)
+            AppLogger.e(TAG, "Failed to close HTTP TTS engine", e)
         }
     }
 
@@ -435,7 +435,7 @@ open class HttpVoiceProvider(
 
             return@withContext tempFile
         } catch (e: Exception) {
-            AppLogger.e(TAG, "获取HTTP TTS音频失败", e)
+            AppLogger.e(TAG, "Failed to get HTTP TTS audio", e)
             if (e is TtsException) throw e
             throw TtsException(context.getString(R.string.http_tts_fetch_failed), cause = e)
         }
@@ -988,7 +988,7 @@ open class HttpVoiceProvider(
             }
             audioCache.clear()
         } catch (e: Exception) {
-            AppLogger.e(TAG, "清除HTTP TTS缓存失败", e)
+            AppLogger.e(TAG, "Failed to clear HTTP TTS cache", e)
         }
     }
 } 

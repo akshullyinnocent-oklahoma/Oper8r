@@ -65,7 +65,7 @@ class DemoStateManager(private val context: Context, private val coroutineScope:
     /** Initialize state */
     fun initialize() {
         coroutineScope.launch {
-            AppLogger.d(TAG, "Initializing state...")
+            AppLogger.d(TAG, "初始化状态...")
             registerStateChangeListeners()
             refreshStatusAsync()
         }
@@ -182,14 +182,14 @@ class DemoStateManager(private val context: Context, private val coroutineScope:
     }
 
     /**
-     * Refresh all states
+     * 刷新所有状态
      */
     suspend fun refreshAllStates() {
         refreshNodejsPythonEnvironment()
     }
 
     /**
-     * Public method to refresh all states
+     * 公开的刷新所有状态方法
      */
     fun refreshAllStatesPublic() {
         coroutineScope.launch {
@@ -208,7 +208,7 @@ class DemoStateManager(private val context: Context, private val coroutineScope:
 
     /** Initialize state asynchronously */
     suspend fun initializeAsync() {
-        AppLogger.d(TAG, "Asynchronously initializing state...")
+        AppLogger.d(TAG, "异步初始化状态...")
         registerStateChangeListeners()
         refreshStatusAsync()
     }
@@ -247,7 +247,7 @@ class DemoStateManager(private val context: Context, private val coroutineScope:
                 _uiState.value.hasShizukuPermission.value = ShizukuAuthorizer.hasShizukuPermission()
 
                 if (!_uiState.value.hasShizukuPermission.value) {
-                    AppLogger.d(TAG, "Missing Shizuku API_V23 permission, showing Shizuku wizard card")
+                    AppLogger.d(TAG, "缺少Shizuku API_V23权限，显示Shizuku向导卡片")
                     _uiState.value.showShizukuWizard.value = true
                 }
             } else {
@@ -261,7 +261,7 @@ class DemoStateManager(private val context: Context, private val coroutineScope:
             // 延迟300ms以确保UI能够刷新
             delay(300)
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error refreshing permission state: ${e.message}", e)
+            AppLogger.e(TAG, "刷新权限状态时出错: ${e.message}", e)
         } finally {
             _uiState.update { currentState ->
                 currentState.copy(isRefreshing = mutableStateOf(false))
@@ -270,7 +270,7 @@ class DemoStateManager(private val context: Context, private val coroutineScope:
     }
 
     /**
-     * Checking NodeJS and Python environment status
+     * 检查NodeJS和Python环境状态
      */
     suspend fun refreshNodejsPythonEnvironment() {
         try {
@@ -318,10 +318,10 @@ class DemoStateManager(private val context: Context, private val coroutineScope:
             // 更新环境就绪状态 - 只有pnpm和python(包含pip)都准备好时才为true
             isNodejsPythonEnvironmentReady.value = isPnpmInstalled.value && isPythonInstalled.value
             
-            AppLogger.d(TAG, "NodeJS environment check - pnpm: ${isPnpmInstalled.value}, python: $hasPython, pip: $hasPip, python environment: ${isPythonInstalled.value}, overall ready: ${isNodejsPythonEnvironmentReady.value}")
+            AppLogger.d(TAG, "NodeJS环境检查 - pnpm: ${isPnpmInstalled.value}, python: $hasPython, pip: $hasPip, python环境: ${isPythonInstalled.value}, 整体ready: ${isNodejsPythonEnvironmentReady.value}")
             
         } catch (e: Exception) {
-            AppLogger.e(TAG, "Error checking NodeJS and Python environment", e)
+            AppLogger.e(TAG, "检查NodeJS和Python环境时出错", e)
             isPnpmInstalled.value = false
             isPythonInstalled.value = false
             isNodejsPythonEnvironmentReady.value = false
@@ -329,7 +329,7 @@ class DemoStateManager(private val context: Context, private val coroutineScope:
     }
 }
 
-/** Refresh app permissions and component states */
+/** 刷新应用权限和组件状态 */
 suspend fun refreshPermissionsAndStatus(
     context: Context,
     updateShizukuInstalled: (Boolean) -> Unit,
@@ -344,7 +344,7 @@ suspend fun refreshPermissionsAndStatus(
     updateAccessibilityProviderInstalled: (Boolean) -> Unit,
     updateAccessibilityServiceEnabled: (Boolean) -> Unit
 ) {
-    AppLogger.d(TAG, "Refreshing app permission state...")
+    AppLogger.d(TAG, "刷新应用权限状态...")
 
     // 检查Shizuku安装、运行和权限状态
     val isShizukuInstalled = ShizukuAuthorizer.isShizukuInstalled(context)
@@ -397,7 +397,7 @@ suspend fun refreshPermissionsAndStatus(
             false
         }
     } catch (e: Exception) {
-        AppLogger.e(TAG, "Error checking NodeJS and Python environment", e)
+        AppLogger.e(TAG, "检查NodeJS和Python环境时出错", e)
         false
     }
     updateOperitTerminalInstalled(isNodejsPythonEnvironmentReady)

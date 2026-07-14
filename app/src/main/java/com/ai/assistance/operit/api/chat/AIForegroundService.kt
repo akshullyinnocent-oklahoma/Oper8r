@@ -276,7 +276,7 @@ class AIForegroundService : Service() {
                     BitmapFactory.decodeStream(stream)
                 }
             } catch (e: Exception) {
-                AppLogger.e(TAG, "从URI加载Bitmap失败: ${e.message}", e)
+                AppLogger.e(TAG, "Failed to load Bitmap from URI: ${e.message}", e)
                 null
             }
         }
@@ -290,10 +290,10 @@ class AIForegroundService : Service() {
             notifyReplyOverride: Boolean? = null
         ) {
             try {
-                AppLogger.d(TAG, "检查是否需要发送会话完成通知: chatId=$chatId")
+                AppLogger.d(TAG, "Checking if session completion notification needed: chatId=$chatId")
 
                 if (ActivityLifecycleManager.getCurrentActivity() != null) {
-                    AppLogger.d(TAG, "应用在前台，无需发送会话完成通知")
+                    AppLogger.d(TAG, "App in foreground, session completion notification skipped")
                     return
                 }
 
@@ -304,12 +304,12 @@ class AIForegroundService : Service() {
                 }
                 val shouldNotify = notifyReplyOverride ?: globalEnableReplyNotification
                 if (!shouldNotify) {
-                    AppLogger.d(TAG, "回复通知已禁用，跳过发送")
+                    AppLogger.d(TAG, "Reply notification disabled, skipping send")
                     return
                 }
 
                 if (rawReplyContent.isNullOrBlank()) {
-                    AppLogger.d(TAG, "回复内容为空，跳过发送回复通知: chatId=$chatId")
+                    AppLogger.d(TAG, "Reply content empty, skipping reply notification: chatId=$chatId")
                     return
                 }
 
@@ -378,9 +378,9 @@ class AIForegroundService : Service() {
                 val tag = buildReplyNotificationTag(chatId)
                 activeReplyNotificationTags.add(tag)
                 manager.notify(tag, REPLY_NOTIFICATION_ID, notificationBuilder.build())
-                AppLogger.d(TAG, "AI回复通知已发送: chatId=$chatId, tag=$tag")
+                AppLogger.d(TAG, "AI reply notification sent: chatId=$chatId, tag=$tag")
             } catch (e: Exception) {
-                AppLogger.e(TAG, "发送AI回复通知失败: ${e.message}", e)
+                AppLogger.e(TAG, "Failed to send AI reply notification: ${e.message}", e)
             }
         }
 
@@ -925,7 +925,7 @@ class AIForegroundService : Service() {
         super.onCreate()
         isRunning.set(true)
         wakeListeningSuspendedForIme = lastRequestedImeVisible
-        AppLogger.d(TAG, "AI 前台服务创建。")
+        AppLogger.d(TAG, "AIForegroundService created.")
         chatRuntimeHolder
         createNotificationChannel()
         val notification = createNotification()
@@ -943,7 +943,7 @@ class AIForegroundService : Service() {
         observeChatRuntimeStats()
         startWakeMonitoring()
         startExternalHttpMonitoring()
-        AppLogger.d(TAG, "AI 前台服务已启动。")
+        AppLogger.d(TAG, "AIForegroundService started.")
     }
 
     private fun observeRuntimeTaskViewPreference() {
@@ -957,7 +957,7 @@ class AIForegroundService : Service() {
                         updateRuntimeTaskViewVisibility()
                     }
             } catch (e: Exception) {
-                AppLogger.e(TAG, "监听运行时任务视图隐藏设置失败: ${e.message}", e)
+                AppLogger.e(TAG, "Failed to listen for task view hide setting: ${e.message}", e)
             }
         }
     }
@@ -978,7 +978,7 @@ class AIForegroundService : Service() {
                         }
                     }
             } catch (e: Exception) {
-                AppLogger.e(TAG, "监听后台保活设置失败: ${e.message}", e)
+                AppLogger.e(TAG, "Failed to listen for background keep-alive setting: ${e.message}", e)
             }
         }
     }
@@ -998,20 +998,20 @@ class AIForegroundService : Service() {
             val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
             val appTasks = activityManager?.appTasks.orEmpty()
             if (appTasks.isEmpty()) {
-                AppLogger.d(TAG, "更新运行时任务视图隐藏状态时未找到任务: hidden=$shouldHide")
+                AppLogger.d(TAG, "Task not found when updating task view hide status: hidden=$shouldHide")
                 return
             }
             appTasks.forEach { task ->
                 try {
                     task.setExcludeFromRecents(shouldHide)
                 } catch (e: Exception) {
-                    AppLogger.e(TAG, "设置任务最近任务可见性失败: hidden=$shouldHide", e)
+                    AppLogger.e(TAG, "Failed to set recent task visibility: hidden=$shouldHide", e)
                 }
             }
             lastAppliedRuntimeTaskViewHidden = shouldHide
-            AppLogger.d(TAG, "运行时任务视图隐藏状态已更新: hidden=$shouldHide, taskCount=${appTasks.size}")
+            AppLogger.d(TAG, "Task view hide status updated: hidden=$shouldHide, taskCount=${appTasks.size}")
         } catch (e: Exception) {
-            AppLogger.e(TAG, "更新运行时任务视图隐藏状态失败: hidden=$shouldHide", e)
+            AppLogger.e(TAG, "Failed to update task view hide status: hidden=$shouldHide", e)
         }
     }
 
@@ -1086,19 +1086,19 @@ class AIForegroundService : Service() {
             try {
                 AIMessageManager.cancelCurrentOperation()
             } catch (e: Exception) {
-                AppLogger.e(TAG, "退出时取消当前AI任务失败: ${e.message}", e)
+                AppLogger.e(TAG, "Failed to cancel current AI task on exit: ${e.message}", e)
             }
 
             try {
                 stopService(Intent(this, FloatingChatService::class.java))
             } catch (e: Exception) {
-                AppLogger.e(TAG, "退出时停止 FloatingChatService 失败: ${e.message}", e)
+                AppLogger.e(TAG, "Failed to stop FloatingChatService on exit: ${e.message}", e)
             }
 
             try {
                 stopService(Intent(this, UIDebuggerService::class.java))
             } catch (e: Exception) {
-                AppLogger.e(TAG, "退出时停止 UIDebuggerService 失败: ${e.message}", e)
+                AppLogger.e(TAG, "Failed to stop UIDebuggerService on exit: ${e.message}", e)
             }
 
             stopExternalHttpServer(lastError = null)
@@ -1113,7 +1113,7 @@ class AIForegroundService : Service() {
                     }
                 }
             } catch (e: Exception) {
-                AppLogger.e(TAG, "退出时关闭前台界面失败: ${e.message}", e)
+                AppLogger.e(TAG, "Failed to close foreground UI on exit: ${e.message}", e)
             }
 
             try {
@@ -1125,7 +1125,7 @@ class AIForegroundService : Service() {
                 activeReplyNotificationTags.clear()
                 manager.cancel(REPLY_NOTIFICATION_ID)
             } catch (e: Exception) {
-                AppLogger.e(TAG, "退出时取消通知失败: ${e.message}", e)
+                AppLogger.e(TAG, "Failed to cancel notification on exit: ${e.message}", e)
             }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -1167,14 +1167,14 @@ class AIForegroundService : Service() {
         }
 
         if (intent?.action == ACTION_TOGGLE_WAKE_LISTENING) {
-            AppLogger.d(TAG, "收到 ACTION_TOGGLE_WAKE_LISTENING")
+            AppLogger.d(TAG, "Received ACTION_TOGGLE_WAKE_LISTENING")
             serviceScope.launch {
                 try {
                     val current = wakePrefs.alwaysListeningEnabledFlow.first()
-                    AppLogger.d(TAG, "切换唤醒监听: $current -> ${!current}")
+                    AppLogger.d(TAG, "Toggling wake listening: $current -> ${!current}")
                     wakePrefs.saveAlwaysListeningEnabled(!current)
                 } catch (e: Exception) {
-                    AppLogger.e(TAG, "切换唤醒监听失败: ${e.message}", e)
+                    AppLogger.e(TAG, "Failed to toggle wake listening: ${e.message}", e)
                 }
 
                 val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -1234,7 +1234,7 @@ class AIForegroundService : Service() {
                 // 立即刷新通知状态（真正的状态重置由 EnhancedAIService.cancelConversation/stopAiService 完成）
                 updateAiBusyState(false)
             } catch (e: Exception) {
-                AppLogger.e(TAG, "取消当前AI任务失败: ${e.message}", e)
+                AppLogger.e(TAG, "Failed to cancel current AI task: ${e.message}", e)
             }
             val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             manager.notify(NOTIFICATION_ID, createNotification())
@@ -1245,7 +1245,7 @@ class AIForegroundService : Service() {
         intent?.let {
             characterName = it.getStringExtra(EXTRA_CHARACTER_NAME)
             avatarUri = it.getStringExtra(EXTRA_AVATAR_URI)
-            AppLogger.d(TAG, "收到通知数据 - 角色: $characterName, 头像: $avatarUri")
+            AppLogger.d(TAG, "Received notification data - role: $characterName, avatar: $avatarUri")
 
             val state = it.getStringExtra(EXTRA_STATE)
             if (state != null) {
@@ -1258,7 +1258,7 @@ class AIForegroundService : Service() {
                     !backgroundKeepAliveEnabled &&
                     !externalHttpEnabled
                 ) {
-                    AppLogger.d(TAG, "服务进入空闲且无持久后台职责，停止前台服务并移除通知")
+                    AppLogger.d(TAG, "Service entered idle state and no persistent background responsibilities, stopping foreground service and removing notification")
                     stopSelfIfIdle(ignoreAppForeground = true)
                     return START_NOT_STICKY
                 }
@@ -1294,7 +1294,7 @@ class AIForegroundService : Service() {
         updateAiBusyState(false)
         hideKeepAliveOverlay()
         stopWakeMonitoring()
-        AppLogger.d(TAG, "AI 前台服务已销毁。")
+        AppLogger.d(TAG, "AIForegroundService destroyed.")
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -1363,21 +1363,21 @@ class AIForegroundService : Service() {
                 launch {
                     wakePrefs.wakePhraseFlow.collectLatest { phrase ->
                         currentWakePhrase = phrase.ifBlank { WakeWordPreferences.DEFAULT_WAKE_PHRASE }
-                        AppLogger.d(TAG, "唤醒词更新: '$currentWakePhrase'")
+                        AppLogger.d(TAG, "Wake phrase updated: '$currentWakePhrase'")
                     }
                 }
 
                 launch {
                     wakePrefs.wakePhraseRegexEnabledFlow.collectLatest { enabled ->
                         wakePhraseRegexEnabled = enabled
-                        AppLogger.d(TAG, "唤醒词正则开关更新: enabled=$enabled")
+                        AppLogger.d(TAG, "Wake phrase regex toggle updated: enabled=$enabled")
                     }
                 }
 
                 launch {
                     wakePrefs.wakeRecognitionModeFlow.collectLatest { mode ->
                         wakeRecognitionMode = mode
-                        AppLogger.d(TAG, "唤醒识别模式更新: $mode")
+                        AppLogger.d(TAG, "Wake recognition mode updated: $mode")
                         applyWakeListeningState()
                     }
                 }
@@ -1388,14 +1388,14 @@ class AIForegroundService : Service() {
                             val feats = t.features
                             if (feats.isEmpty()) null else feats.toFloatArray()
                         }
-                        AppLogger.d(TAG, "个人化唤醒模板更新: count=${personalWakeTemplates.size}")
+                        AppLogger.d(TAG, "Personalized wake template updated: count=${personalWakeTemplates.size}")
                         applyWakeListeningState()
                     }
                 }
 
                 wakePrefs.alwaysListeningEnabledFlow.collectLatest { enabled ->
                     wakeListeningEnabled = enabled
-                    AppLogger.d(TAG, "唤醒监听开关更新: enabled=$enabled")
+                    AppLogger.d(TAG, "Wake listening toggle updated: enabled=$enabled")
 
                     updateKeepAliveOverlayVisibility()
 
@@ -1568,7 +1568,7 @@ class AIForegroundService : Service() {
             checkSelfPermission(android.Manifest.permission.RECORD_AUDIO) ==
                 PackageManager.PERMISSION_GRANTED
         if (!micGranted) {
-            AppLogger.e(TAG, "启动唤醒监听失败: 未授予 RECORD_AUDIO（请在系统设置中允许麦克风权限）")
+            AppLogger.e(TAG, "Failed to start wake listening: RECORD_AUDIO not granted (please allow microphone permission in system settings)")
             wakeListeningEnabled = false
             try {
                 wakePrefs.saveAlwaysListeningEnabled(false)
@@ -1589,7 +1589,7 @@ class AIForegroundService : Service() {
         try {
             val provider = ensureWakeSpeechProvider()
             val initOk = provider.initialize()
-            AppLogger.d(TAG, "唤醒识别器 initialize: ok=$initOk")
+            AppLogger.d(TAG, "Wake recognizer initialize: ok=$initOk")
             wakeListeningMicActiveForRecordingDetection = true
             val startOk = provider.startRecognition(
                 languageCode = "zh-CN",
@@ -1597,7 +1597,7 @@ class AIForegroundService : Service() {
                 partialResults = true,
                 audioSource = MediaRecorder.AudioSource.MIC,
             )
-            AppLogger.d(TAG, "唤醒识别器 startRecognition: ok=$startOk")
+            AppLogger.d(TAG, "Wake recognizer startRecognition: ok=$startOk")
             if (!startOk) {
                 val alreadyRunning =
                     provider.isRecognizing ||
@@ -1620,7 +1620,7 @@ class AIForegroundService : Service() {
             }
         } catch (e: Exception) {
             wakeListeningMicActiveForRecordingDetection = false
-            AppLogger.e(TAG, "启动唤醒监听失败: ${e.message}", e)
+            AppLogger.e(TAG, "Failed to start wake listening: ${e.message}", e)
             return
         }
 
@@ -1640,7 +1640,7 @@ class AIForegroundService : Service() {
 
                     AppLogger.d(
                         TAG,
-                        "唤醒识别输出(${if (result.isFinal) "final" else "partial"}): '$text'"
+                        "Wake recognition output (${if (result.isFinal) "final" else "partial"}): '$text'"
                     )
 
                     if (wakeHandoffPending) {
@@ -1675,7 +1675,7 @@ class AIForegroundService : Service() {
                         wakeHandoffPending = true
                         wakeStopInProgress = false
 
-                        AppLogger.d(TAG, "命中唤醒词: '$currentWakePhrase' in '$text'")
+                        AppLogger.d(TAG, "Matched wake phrase: '$currentWakePhrase' in '$text'")
                         SpeechPrerollStore.setPendingWakePhrase(
                             phrase = currentWakePhrase,
                             regexEnabled = wakePhraseRegexEnabled,
@@ -1711,7 +1711,7 @@ class AIForegroundService : Service() {
                     wakeHandoffPending = true
                     wakeStopInProgress = false
 
-                    AppLogger.d(TAG, "命中个人化唤醒: similarity=$similarity")
+                    AppLogger.d(TAG, "Matched personalized wake: similarity=$similarity")
                     SpeechPrerollStore.setPendingWakePhrase(
                         phrase = currentWakePhrase,
                         regexEnabled = wakePhraseRegexEnabled,
@@ -1781,7 +1781,7 @@ class AIForegroundService : Service() {
                     waitedMs += 250
                 }
 
-                AppLogger.d(TAG, "等待悬浮窗启动: waitedMs=$waitedMs, instance=${FloatingChatService.getInstance() != null}")
+                AppLogger.d(TAG, "Waiting for floating window start: waitedMs=$waitedMs, instance=${FloatingChatService.getInstance() != null}")
 
                 while (isActive) {
                     if (!wakeListeningEnabled) return@launch
@@ -1789,7 +1789,7 @@ class AIForegroundService : Service() {
                     delay(500)
                 }
 
-                AppLogger.d(TAG, "检测到悬浮窗已关闭，准备恢复唤醒监听")
+                AppLogger.d(TAG, "Floating window closed, preparing to resume wake listening")
 
                 if (wakeHandoffPending) {
                     AppLogger.d(TAG, "Wake handoff aborted, clearing pending state")
@@ -1806,7 +1806,7 @@ class AIForegroundService : Service() {
     }
 
     private fun triggerWakeLaunch() {
-        AppLogger.d(TAG, "triggerWakeLaunch: 打开全屏悬浮窗并进入语音")
+        AppLogger.d(TAG, "triggerWakeLaunch: Opening full-screen floating window and entering voice mode")
         try {
             val floatingIntent = Intent(this, FloatingChatService::class.java).apply {
                 putExtra("INITIAL_MODE", com.ai.assistance.operit.ui.floating.FloatingMode.FULLSCREEN.name)
@@ -1820,7 +1820,7 @@ class AIForegroundService : Service() {
                 startService(floatingIntent)
             }
         } catch (e: Exception) {
-            AppLogger.e(TAG, "唤醒打开悬浮窗失败: ${e.message}", e)
+            AppLogger.e(TAG, "Failed to open floating window via wake word: ${e.message}", e)
         }
     }
 

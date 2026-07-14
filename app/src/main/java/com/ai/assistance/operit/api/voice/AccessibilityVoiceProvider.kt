@@ -240,7 +240,7 @@ class SimpleVoiceProvider(
                                         }
                                         AppLogger.e(
                                             TAG,
-                                            "TTS错误: utteranceId=$utteranceId, errorCode=$errorCode"
+                                            "TTS error: utteranceId=$utteranceId, errorCode=$errorCode"
                                         )
                                     }
 
@@ -270,7 +270,7 @@ class SimpleVoiceProvider(
                             _isInitialized.value = true
                             continuation.resume(true)
                         } else {
-                            AppLogger.e(TAG, "TTS初始化失败: $status")
+                            AppLogger.e(TAG, "TTS initialization failed: $status")
                             _isInitialized.value = false
                             continuation.resumeWith(
                                 Result.failure(
@@ -373,7 +373,7 @@ class SimpleVoiceProvider(
                             if (!submitSuccess) {
                                 removeQueuedUtteranceLocked(entry.utteranceId)
                                 updateSpeakingStateLocked("speak.submitFailed")
-                                AppLogger.e(TAG, "TTS播放失败: submitResult=false")
+                                AppLogger.e(TAG, "TTS playback failed: submitResult=false")
                             } else {
                                 _isSpeaking.value = true
                                 logQueueState(
@@ -386,7 +386,7 @@ class SimpleVoiceProvider(
 
                     continuation.resume(success)
                 } ?: run {
-                    AppLogger.e(TAG, "TTS引擎未初始化")
+                    AppLogger.e(TAG, "TTS engine not initialized")
                     continuation.resume(false)
                 }
             }
@@ -559,7 +559,7 @@ class SimpleVoiceProvider(
                 it.stop()
                 it.shutdown()
             } catch (e: Exception) {
-                AppLogger.e(TAG, "关闭TTS引擎失败", e)
+                AppLogger.e(TAG, "Failed to close TTS engine", e)
             } finally {
                 synchronized(queueLock) {
                     queuedUtterances.clear()
@@ -612,7 +612,7 @@ class SimpleVoiceProvider(
                     }
                 }
             } else {
-                AppLogger.w(TAG, "当前Android版本不支持获取TTS语音列表")
+                AppLogger.w(TAG, "Current Android version does not support getting TTS voice list")
             }
 
             return@withContext result
@@ -641,13 +641,13 @@ class SimpleVoiceProvider(
                             }
                             return@withContext result
                         } else {
-                            AppLogger.e(TAG, "未找到ID为'$voiceId'的语音")
+                            AppLogger.e(TAG, "Voice ID '$voiceId' not found")
                             return@withContext false
                         }
                     }
                 }
             } else {
-                AppLogger.w(TAG, "当前Android版本不支持设置TTS语音")
+                AppLogger.w(TAG, "Current Android version does not support setting TTS voice")
             }
 
             return@withContext false
